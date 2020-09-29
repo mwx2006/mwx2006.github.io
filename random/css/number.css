@@ -1,0 +1,378 @@
+@charset "utf-8";
+.clearAll {
+  clear: both;
+}
+.fn_part h1 {
+  height: 28px;
+  background-position: 0 0;
+  background-repeat: no-repeat;
+}
+.fn_part .st_outer {
+  float: left;
+  border: 2px solid #ffa73e;
+  background-color: #fff;
+  margin-right: 5px;
+  padding: 2px 2px 3px;
+  _display: inline;
+}
+.fn_part .st_inner {
+  overflow: hidden;
+  height: 18px;
+}
+.fn_part .st_inner select {
+  display: block;
+  height: 20px;
+  margin-top: -1px;
+  margin-left: -1px;
+}
+.fn_part .ipt_text {
+  width: 308px;
+  height: 21px;
+  border: 2px solid #ffa73e;
+  float: left;
+  _display: inline;
+}
+.fn_part .btn_orange_1 {
+  margin-left: 8px;
+  _display: inline;
+}
+.fn_part .flag_tl_t3 {
+  clear: both;
+}
+.fn_part .mod_box_t3 {
+  height: auto;
+}
+.fn_part .fn_box {
+  background-image: url(../../../images/suanming/v2/bg_num.png);
+  background-repeat: no-repeat;
+  background-position: right top;
+}
+.fn_part .fn_box .mod_form {
+  margin: 0;
+  padding-left: 90px;
+  padding-top: 50px;
+  height: 52px;
+}
+.mathmod_form {
+  margin: 0;
+  padding: 20px 10px;
+}
+.mathmod_form .mod_txt li {
+  width: 45%;
+}
+.fn_part .fn_box .remark {
+  color: red;
+  font-size: 12px;
+  line-height: 24px;
+}
+.fn_part .fn_box .help_area {
+  text-align: right;
+  padding-right: 12px;
+}
+.fn_part .intro_area {
+  color: #8a4626;
+  line-height: 22px;
+  margin-top: 5px;
+  text-indent: 2em;
+  border: 1px solid #d0ad9a;
+  padding: 0 10px;
+}
+.fn_part .intro_area p {
+  padding-top: 8px;
+}
+.fn_part .result_area {
+  padding: 0 50px 30px 54px;
+  font-size: 14px;
+}
+.fn_part .result_area p {
+  overflow: hidden;
+  zoom: 1;
+  line-height: 24px;
+  padding: 6px 0;
+}
+.fn_part .result_area p strong {
+  float: left;
+  width: 78px;
+  color: #333;
+}
+.fn_part .result_area p span {
+  float: left;
+  width: 546px;
+  color: #8a4626;
+}
+.fn_part .result_area p span .c_333 {
+  color: #333;
+}
+.fn_part .result_area p span .owner {
+  display: inline-block;
+  width: 78px;
+  height: 23px;
+  line-height: 23px;
+  color: #813d20;
+  font-size: 12px;
+  text-align: center;
+  background: url(../../../images/suanming/v2/haoma_sprites.png) 0 0 no-repeat;
+  margin-left: 15px;
+}
+.fn_part .result_area p span .owner:hover {
+  background-position: -100px 0;
+  text-decoration: none;
+}
+.fn_part .result_area p span .good {
+  color: red;
+  font-weight: 700;
+}
+.fn_part .result_area p span .bad {
+  color: #fd5151;
+  font-weight: 700;
+}
+.fn_haoma h1 {
+  width: 140px;
+  background-image: url(../../../images/suanming/v2/tit_haoma.png);
+}
+.fn_haoma .form_sj,
+.fn_haoma .form_cp,
+.fn_haoma .form_qq {
+  margin-right: 8px;
+}
+.fn_haoma .ipt_text {
+  width: 188px;
+}
+.fn_haoma .btn_orange_1 {
+  float: left;
+}
+.fn_haoma .form_item {
+  float: left;
+  width: 290px;
+  height: 86px;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+}
+.fn_haoma .form_item h3 {
+  color: #813d20;
+  font-size: 14px;
+  font-weight: 700;
+  height: 24px;
+  line-height: 24px;
+  padding: 10px 0 5px;
+}
+.fn_haoma .form_cp .st_inner {
+  width: 42px;
+}
+.fn_haoma .form_cp .st_inner select {
+  width: 44px;
+}
+.fn_haoma .form_cp .ipt_text {
+  width: 78px;
+}
+.fn_haoma .form_remark p {
+  font-size: 12px;
+  height: 88px;
+  line-height: 22px;
+  overflow: hidden;
+  color: #813d20;
+}
+.fn_sj h1 {
+  width: 194px;
+  background-image: url(../../../images/suanming/v2/tit_haoma_sj.png);
+}
+.fn_sj2 h1 {
+  width: 194px;
+  background-image: url(../../../images/suanming/v2/tit_haoma_sj2.png);
+}
+.fn_dh h1 {
+  width: 194px;
+  background-image: url(../../../images/suanming/v2/tit_haoma_dh.png);
+}
+.fn_cp h1 {
+  width: 194px;
+  background-image: url(../../../images/suanming/v2/tit_haoma_cp.png);
+}
+.fn_cp .fn_box .st_inner {
+  width: 48px;
+  margin: 0 1px;
+}
+.fn_cp .fn_box .st_inner select {
+  width: 50px;
+}
+.fn_cp .fn_box .ipt_text {
+  width: 263px;
+}
+.fn_cp .fn_box .remark {
+  padding-left: 122px;
+}
+.fn_sfz h1 {
+  width: 220px;
+  background-image: url(../../../images/suanming/v2/tit_haoma_sfz.png);
+}
+.fn_sfz h2 {
+  color: #834b27;
+  font-size: 24px;
+  font-family: \5fae\8f6f\96c5\9ed1, \9ed1\4f53;
+}
+.fn_qq h1 {
+  width: 180px;
+  background-image: url(../../../images/suanming/v2/tit_haoma_qq.png);
+}
+.mathmod_form input[type="text"],
+.mathmod_form input[type="number"] {
+  background: #fff;
+  border: 1px solid #d0ad9a;
+  font-size: 16px;
+  margin: 5px 2px;
+  padding: 4px;
+  width: auto;
+  text-align: left;
+}
+.mathmod_form input[type="text"]:disabled,
+.mathmod_form input[readonly] {
+  background: #ffe;
+  border: #eba 1px solid;
+}
+.mathmod_form hr {
+  height: 1px;
+  border: none;
+  border-top: 1px dashed #aaa;
+}
+.mathmod_form select {
+  border: 1px solid #d0ad9a;
+  color: #717070;
+  font-size: 16px;
+  margin: 5px 2px;
+  padding: 4px;
+}
+.mathmod_form input[type="text"]:focus,
+select:focus {
+  background: #fff;
+  -webkit-box-shadow: inset 7px 7px 5px -6px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: inset 7px 7px 5px -6px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 7px 7px 5px -6px rgba(0, 0, 0, 0.3);
+  border: #f07d7d 1px solid;
+}
+.mathmod_form input[type="text"],
+select::-webkit-input-placeholder {
+  color: #000;
+  text-shadow: #fff 1px 1px 0;
+}
+.mathmod_form input[type="text"],
+select::-moz-placeholder {
+  color: #000;
+  text-shadow: #fff 1px 1px 0;
+}
+.mathmod_form input[type="text"],
+select:-ms-input-placeholder {
+  color: #000;
+  text-shadow: #fff 1px 1px 0;
+}
+.mathmod_form input[type="text"],
+select:-moz-placeholder {
+  color: #000;
+  text-shadow: #fff 1px 1px 0;
+}
+.radio_check {
+  padding: 10px 10px 10px 5px;
+  font-size: 16px;
+  margin: 5px 5px 5px 0;
+  float: left;
+}
+.mathmod_form input[type="button"],
+.mathmod_form input[type="submit"],
+.mathmod_form button {
+  padding: 5px 8px;
+  border: 1px solid #caab96;
+  margin: 2px;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: #813d20;
+  cursor: pointer;
+  background-color: #fdfaf3;
+  border-radius: 2px;
+}
+.mathmod_form input[type="button"]:hover,
+.mathmod_form input[type="submit"]:hover,
+.mathmod_form button:hover {
+  border-color: #7c4328;
+  background-color: #a4672e;
+  color: #fff;
+}
+.mathmod_form input[type="reset"] {
+  padding: 5px 8px;
+  border: 1px solid #caab96;
+  margin: 2px;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: #813d20;
+  cursor: pointer;
+  background-color: #fdfaf3;
+  background-clip: padding-box;
+  border-radius: 2px;
+}
+.mathmod_form input[type="reset"]:hover {
+  border-color: #7c4328;
+  background-color: #a4672e;
+  color: #fff;
+}
+.mathmod_form textarea {
+  margin: 10px 0%;
+  padding: 2%;
+  width: 96%;
+  height: 150px;
+  background: #ffe;
+  border: #abadb3 1px solid;
+  color: #333;
+  font-size: 16px;
+}
+.domainCheck {
+  border: 1px solid #c9ccd1;
+  padding: 10px;
+}
+.calc_red_title {
+  color: #cf5d50;
+  text-shadow: #fff 1px 1px 0;
+  font-weight: 400;
+}
+.result {
+  margin-top: 10px;
+  padding: 10px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #c9ccd1;
+  font-size: 23px;
+  text-align: center;
+}
+.mathmod_form a,
+.right_box a {
+  text-decoration: none;
+  color: #813d20;
+}
+.mathmod_form a:hover,
+.right_box a:hover {
+  text-decoration: underline;
+  color: #fd5151;
+}
+input[type="checkbox"] {
+  margin: 3px 3px 3px 4px;
+}
+.fn_box table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.intro_area img {
+  background: #fff;
+  padding: 5px;
+  box-shadow: 1px 1px 2px #e6e6e6;
+  border: 1px solid #e6e6e6;
+  margin: 2px auto;
+  display: block;
+}
+.ad {
+  margin: 5px 0 0;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #fff;
+  box-shadow: #ccc 1px 1px 1px;
+}

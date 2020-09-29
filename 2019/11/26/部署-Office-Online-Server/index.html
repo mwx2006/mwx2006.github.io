@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  
+  <title itemprop="name">部署 Office Online Server | MWX</title>
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+SerifMerriweather|Merriweather+Sans|Source+Code+Pro|Ubuntu:400,700|Noto+Serif+SC" media="all">
+  <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+  <link rel="stylesheet" id="saukra_css-css" href="/css/style.css" type="text/css" media="all">
+  <link rel="stylesheet" href="/css/lib.min.css" media="all">
+  <link rel="stylesheet" href="/css/font.css" media="all">
+  <link rel="stylesheet" href="/css/insight.css" media="all">
+  <link rel="stylesheet" href="/css/jquery.fancybox.min.css" media="all">
+  <link rel="stylesheet" href="/css/zoom.css" media="all">
+  <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+  <link rel="stylesheet" href="/live2d/css/live2d.css">
+
+<!--   <link rel="stylesheet" id="saukra_css-css" href="https://2heng.xin/wp-content/cache/autoptimize/css/autoptimize_ad42a61f4c7d4bdd9f91afcff6b5dda5.css
+" type="text/css" media="all"> -->
+  <script>
+  /*Initial Variables*/
+  var mashiro_option = new Object();
+  var mashiro_global = new Object();
+  mashiro_option.NProgressON = true;
+  /* 
+   * 邮箱信息之类的东西可以填在这里，这些js变量基本都作用于sakura-app.js
+   * 这样的设置仅是为了方便在基于PHP开发的主题中设置js变量，既然移植到了Node上，我想或许可以精简这一逻辑吧
+   */
+  mashiro_option.email_domain = "";
+  mashiro_option.email_name = "";
+  mashiro_option.cookie_version_control = "";
+  mashiro_option.qzone_autocomplete = false;
+  mashiro_option.site_name = "暗雨-MWX";
+  mashiro_option.author_name = "MWX";
+  mashiro_option.site_url = "https://mwx-lh.com";
+  mashiro_option.v_appId = "4cWxpNhgVTm5dJrnWGU1zpUS-MdYXbMMI";
+  mashiro_option.v_appKey = "9ukWp1RJdcqihwVgnvWTKt5N";
+  mashiro_option.mathjax = "0";
+  mashiro_option.qq_api_url = "https://api.mashiro.top/qqinfo/"; 
+  mashiro_option.qq_avatar_api_url = "https://api.mashiro.top/qqinfo/";
+
+  // mashiro_option.jsdelivr_css_src = "https://cdn.jsdelivr.net/gh/moezx/cdn@3.4.5/css/lib.min.css";
+  // mashiro_option.float_player_on = true;
+
+  /*End of Initial Variables*/
+  </script>
+  <script type="text/javascript">
+  var bg = "https://cdn.jsdelivr.net/gh/mwx2006/Img@master/cover/(1).jpg.webp,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/cover/(2).jpg.webp,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/cover/(3).jpg.webp,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/cover/(4).jpg.webp,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/cover/(5).jpg.webp,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/cover/(6).jpg.webp,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/cover/(7).jpg.webp,https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/cover/(8).jpg.webp,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_01.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_02.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_03.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_04.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_05.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_06.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_07.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_08.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_09.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_10.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_11.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_12.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_13.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_14.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_15.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_16.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_17.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_18.jpg".split(",");
+  var bgindex = Math.floor(Math.random()*bg.length);
+  if (!!window.ActiveXObject || "ActiveXObject" in window) { //is IE?
+    alert('朋友，IE浏览器未适配哦~');
+  }
+  </script>
+  <style type="text/css">
+  .hljs-ln{border-collapse:collapse}.hljs-ln td{padding:0}.hljs-ln-n:before{content:attr(data-line-number)}
+  </style>
+  <style type="text/css">.site-top .lower nav{display:block !important;}.author-profile i,.post-like a,.post-share .show-share,.sub-text,.we-info a,span.sitename,.post-more i:hover,#pagination a:hover,.post-content a:hover,.float-content i:hover{color:#FE9600}.feature i,.download,.navigator i:hover,.links ul li:before,.ar-time i,span.ar-circle,.object,.comment .comment-reply-link,.siren-checkbox-radio:checked + .siren-checkbox-radioInput:after{background:#FE9600}::-webkit-scrollbar-thumb{background:#FE9600}.download,.navigator i:hover,.link-title,.links ul li:hover,#pagination a:hover,.comment-respond input[type='submit']:hover{border-color:#FE9600}.entry-content a:hover,.site-info a:hover,.comment h4 a,#comments-navi a.prev,#comments-navi a.next,.comment h4 a:hover,.site-top ul li a:hover,.entry-title a:hover,#archives-temp h3,span.page-numbers.current,.sorry li a:hover,.site-title a:hover,i.iconfont.js-toggle-search.iconsearch:hover,.comment-respond input[type='submit']:hover{color:#FE9600}.comments .comments-main{display:block !important;}.comments .comments-hidden{display:none !important;}background-position:center center;background-attachment:inherit;}
+  </style>
+  <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?fdc45c4ded64e67bae4dac25882e0364";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<!--哀悼模式
+<style type="text/css">
+    html {
+    FILTER: gray;
+    -webkit-filter: grayscale(100%);
+    }
+</style>-->
+</head></html>
+<body class="page-template page-template-user page-template-page-analytics page-template-userpage-analytics-php page page-id-1297 chinese-font serif isWebKit">
+  <div class="scrollbar" id="bar">
+  </div>
+  <a href="#" class="cd-top faa-float animated"></a>
+  <section id="main-container">
+    <div class="headertop filter-grid">
+  <div id="banner_wave_1"></div>
+  <div id="banner_wave_2"></div>
+  <figure id="centerbg" class="centerbg">
+    <div class="focusinfo no-select">
+      <div class="header-tou">
+        <a href="https://mwx-lh.com">
+          <img src="https://cdn.jsdelivr.net/gh/mwx2006/Img/avatar.jpg">
+        </a>
+      </div>
+      <div class="header-info">
+        <p>帷幕落下,喝彩响起,片刻后都沉寂.</p>
+        <div class="top-social_v2">
+          <li id="bg-pre">
+            <img class="flipx" src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/next-b.svg">
+          </li>
+          
+            
+              
+                <li>
+                  <a href="http://github.com/mwx2006" target="_blank" class="social-github" title="github">
+                    <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/social/github.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="https://weibo.com/mwx2006" target="_blank" class="social-github" title="sina">
+                    <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/social/sina.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="https://music.163.com/#/user/home?id=570158205" target="_blank" class="social-github" title="wangyiyun">
+                    <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/social/wangyiyun.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="https://t.me/joinchat/Obf09BP1q8SnCix5qkar9A" target="_blank" class="social-github" title="telegram">
+                    <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/social/telegram.svg">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="https://user.qzone.qq.com/2942799863" target="_blank" class="social-github" title="qzone">
+                    <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/social/qzone.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="mailto:2942799863@qq.com" target="_blank" class="social-github" title="email">
+                    <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/social/email.svg">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="//qm.qq.com/cgi-bin/qm/qr?k=m6GEN2Nsacav0YZL0tNH_fJIjhobCCu0&amp;authKey=U4jHIGQX1GgbMz5fjDiDhqfhuFOwDeK%2BH9%2BpEx8Y770t1BSnh0zO0uKljL1DAQIc&amp;group_code=827275454" target="_blank" class="social-github" title="qq">
+                    <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/social/qq.png">
+                  </a>
+                </li>
+              
+            
+          
+          <li id="bg-next">
+            <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/next-b.svg">
+          </li>
+        </div>
+      </div>
+    </div>
+  </figure>
+  <div id="video-container" style="">
+    <video style="object-fit: fill" id="bgvideo" class="video" video-name="" src="" width="auto" preload="auto">
+    </video>
+    <div id="video-btn" class="loadvideo videolive">
+    </div>
+    <div id="video-add">
+    </div>
+    <div class="video-stu">
+    </div>
+  </div>
+  <div class="headertop-down faa-float animated" onclick="headertop_down()">
+    <span>
+      <i class="fa fa-chevron-down" aria-hidden="true">
+      </i>
+    </span>
+  </div>
+</div>
+    <div id="page" class="site wrapper">
+      <header class="site-header no-select gizle sabit" role="banner">
+  <div class="site-top">
+    <div class="site-branding">
+      <span class="site-title">
+        <span class="logolink moe-mashiro">
+          <a href="/">
+            <span class="sakurasono">暗雨-</span>
+            <span class="shironeko">MWX</span>
+          </a>
+        </span>
+      </span>
+    </div>
+    <div class="searchbox search-form-submit">
+      <i class="iconfont js-toggle-search iconsearch icon-search">
+      </i>
+    </div>
+    <div id="show-nav" class="showNav mobile-fit">
+      <div class="line line1">
+      </div>
+      <div class="line line2">
+      </div>
+      <div class="line line3">
+      </div>
+    </div>
+    <div class="lower-cantiner">
+      <div class="lower">
+        <nav class="mobile-fit-control hide">
+          <ul id="menu-new" class="menu">
+            
+              <li>
+                <a href="/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-fort-awesome faa-shake" aria-hidden="true"></i>
+                    首页
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-archive faa-shake" aria-hidden="true"></i>
+                    归档
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/links/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-link faa-shake" aria-hidden="true"></i>
+                    友人帐
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/donate/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-heart faa-pulse" aria-hidden="true"></i>
+                    赞赏
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-leaf faa-wrench" aria-hidden="true"></i>
+                    关于
+                  </span>
+                </a>
+                
+                  <ul class="sub-menu">
+                    
+                      <li>
+                        <a href="/about/">
+                          <i class="fa fa-meetup" aria-hidden="true"></i>
+                          我？
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/theme-sakura/">
+                          <i class="fa iconfont icon-sakura" aria-hidden="true"></i>
+                          主题
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/lab/">
+                          <i class="fa fa-cogs" aria-hidden="true"></i>
+                          Lab
+                        </a>
+                      </li>
+                    
+                  </ul>
+                
+              </li>
+            
+              <li>
+                <a href="/atom.xml">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-rss faa-pulse" aria-hidden="true"></i>
+                    RSS
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/mc/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
+                    我的世界
+                  </span>
+                </a>
+                
+              </li>
+            
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script src="/js/adview_pic_cpc_cpm_cpa_guanggao_gg_ads_300x250_adsbygoogle.js" type="text/javascript"></script> 
+    <script type="text/javascript">
+    if (typeof(killads)=='undefined'){alert('广告被过滤');alert('请把本站加入广告过滤白名单');alert('谢谢');}
+    </script>
+
+</header>
+
+      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
+<div class="pattern-center-blank"></div>
+
+<div id="content" class="site-content">
+  <div id="primary" class="content-area">
+    <main id="main" class="site-main" role="main">
+      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+        <div class="toc"></div>
+        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
+        
+          <header class="entry-header">
+            <h1 class="entry-title">部署 Office Online Server</h1>
+            <p class="entry-census">MWX&nbsp;·&nbsp;2019-11-26&nbsp;·&nbsp;<span id="busuanzi_value_page_pv"></span>次阅读</p></p>
+
+            <hr>
+          </header>
+        
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="fluid"
+     data-ad-layout-key="-fj-5l+ir-3-178"
+     data-ad-client="ca-pub-9543009702827846"
+     data-ad-slot="3040430533"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+        <div class="entry-content">
+          <p><strong>摘要：</strong> 说明如何在本地部署 Office Online Server 以供 SharePoint Server 2016、Skype for Business Server 和 Exchange Server 使用。</p>
+<p><strong>目标用户</strong>：IT 专业人员</p>
+<p>Office Online Server 是 Office Web Apps Server 的下一个版本。部署 Office Online Server 涉及安装某些必备软件和运行一些 Microsoft PowerShell 命令，但总的来说，此过程设计得相当简单。本文将指导完成准备服务器的过程，并提供了配置本地 Office Online Server 场的 Microsoft PowerShell 命令。</p>
+<h2 id="准备服务器以运行-Office-Online-Server"><a href="#准备服务器以运行-Office-Online-Server" class="headerlink" title="准备服务器以运行 Office Online Server"></a>准备服务器以运行 Office Online Server</h2><p>在所有将运行 Office Online Server 的服务器上执行以下过程。本服务器必须是 Windows Server 2012 R2 或 Windows Server 2016。（请注意，Windows Server 2016 需要 Office Online Server 2017 年 4 月或更高版本。）</p>
+<p>Office Online Server 是针对使用默认设置配置的服务器操作系统进行设计和测试。如果需要与非默认设置一起部署，建议从默认设置开始安装和设置。在系统经验证可以正常运行后，再以递增方式添加和测试组策略、安全设置和其他修改。</p>
+<h3 id="第-1-步：安装-Office-Online-Server-必备软件"><a href="#第-1-步：安装-Office-Online-Server-必备软件" class="headerlink" title="第 1 步：安装 Office Online Server 必备软件"></a>第 1 步：安装 Office Online Server 必备软件</h3><h3 id="安装-Office-Online-Server"><a href="#安装-Office-Online-Server" class="headerlink" title="安装 Office Online Server"></a>安装 Office Online Server</h3><ol>
+<li><p>以管理员身份打开 Microsoft PowerShell 提示符，然后运行此命令示例来安装必需的角色和服务。</p>
+<p><strong>Windows Server 2012 R2:</strong></p>
+</li>
+</ol>
+<pre><code>Add-WindowsFeature Web-Server,Web-Mgmt-Tools,Web-Mgmt-Console,Web-WebServer,Web-Common-Http,Web-Default-Doc,Web-Static-Content,Web-Performance,Web-Stat-Compression,Web-Dyn-Compression,Web-Security,Web-Filtering,Web-Windows-Auth,Web-App-Dev,Web-Net-Ext45,Web-Asp-Net45,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Includes,InkandHandwritingServices,NET-Framework-Features,NET-Framework-Core,NET-HTTP-Activation,NET-Non-HTTP-Activ,NET-WCF-HTTP-Activation45,Windows-Identity-Foundation,Server-Media-Foundation</code></pre><p><strong>Windows Server 2016：</strong></p>
+<pre><code>Add-WindowsFeature Web-Server,Web-Mgmt-Tools,Web-Mgmt-Console,Web-WebServer,Web-Common-Http,Web-Default-Doc,Web-Static-Content,Web-Performance,Web-Stat-Compression,Web-Dyn-Compression,Web-Security,Web-Filtering,Web-Windows-Auth,Web-App-Dev,Web-Net-Ext45,Web-Asp-Net45,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Includes,NET-Framework-Features,NET-Framework-45-Features,NET-Framework-Core,NET-Framework-45-Core,NET-HTTP-Activation,NET-Non-HTTP-Activ,NET-WCF-HTTP-Activation45,Windows-Identity-Foundation,Server-Media-Foundation</code></pre><p>如果出现提示，请重新启动服务器。</p>
+<ol>
+<li>安装以下软件：</li>
+</ol>
+<ul>
+<li><a href="https://go.microsoft.com/fwlink/p/?LinkId=510096" target="_blank" rel="noopener">.NET Framework 4.5.2</a></li>
+<li><a href="https://www.microsoft.com/download/details.aspx?id=40784" target="_blank" rel="noopener">Visual C++ Redistributable Packages for Visual Studio 2013</a></li>
+<li><a href="https://go.microsoft.com/fwlink/p/?LinkId=620071" target="_blank" rel="noopener">Visual C++ Redistributable for Visual Studio 2015</a></li>
+<li><a href="https://go.microsoft.com/fwlink/p/?LinkId=620072" target="_blank" rel="noopener">Microsoft.IdentityModel.Extention.dll</a></li>
+</ul>
+<h3 id="步骤-2：安装-Office-Online-Server"><a href="#步骤-2：安装-Office-Online-Server" class="headerlink" title="步骤 2：安装 Office Online Server"></a>步骤 2：安装 Office Online Server</h3><p>下一步，我们将安装 Office Online Server。</p>
+<p>如果计划使用利用外部数据访问的任一 Excel Online 功能（如数据模型、Power Pivot 或 Power View），请注意 Office Online Server 必须以用户身份驻留在同一个 Active Directory 林中，若计划使用基于 Windows 身份验证来访问任一外部数据源也同样如此。</p>
+<p>在将运行 Office Online Server 的所有服务器上完成以下步骤。</p>
+<h3 id="安装-Office-Online-Server-1"><a href="#安装-Office-Online-Server-1" class="headerlink" title="安装 Office Online Server"></a>安装 Office Online Server</h3><ol>
+<li><p>从<a href="http://go.microsoft.com/fwlink/p/?LinkId=256561" target="_blank" rel="noopener">批量许可服务中心 (VLSC)</a> 下载 Office Online Server。Office Online Server 是 Office 的一个组件，因此可在每个产品页中进行下载，包括 Office Standard 2016、Office 专业增强版 2016 和 Office 2015 for Mac 标准版。</p>
+</li>
+<li><p>运行 Setup.exe。</p>
+</li>
+<li><p>在”阅读 Microsoft 软件许可条款”页上，选择”我接受此协议的条款”，然后选择”继续”。</p>
+</li>
+<li><p>在“选择文件位置”<strong>** 页上，选择要将 Office Online Server 文件安装到的文件夹（例如，C:\Program Files\Microsoft Office Web Apps），再选择“立即安装”**</strong>。如果指定的文件夹不存在，安装程序会进行创建。</p>
+<p>我们建议在系统驱动器上安装 Office Online Server。</p>
+</li>
+<li><p>在安装程序安装完 Office Online Server 后，选择”关闭”。</p>
+</li>
+<li><p>如果计划将 Kerberos 约束委派与 Excel Online 结合使用，请在” <strong>服务</strong>“中，将” <strong>Claims to Windows Token Service</strong>“ <a href="https://go.microsoft.com/fwlink/p/?LinkId=620769" target="_blank" rel="noopener">设置为在此服务器上自动启动</a>。</p>
+</li>
+</ol>
+<p>如果计划将 Kerberos 约束委派与 Excel Online 一起使用，请确保将 Office Online Server 场中的每个服务器添加到 Active Directory 域服务委派列表。</p>
+<h3 id="第-3-步：安装-Office-Online-Server-语言包"><a href="#第-3-步：安装-Office-Online-Server-语言包" class="headerlink" title="第 3 步：安装 Office Online Server 语言包"></a>第 3 步：安装 Office Online Server 语言包</h3><p>借助 Office Online Server 语言包，用户可以查看基于 Web 的 Office 多语言文件，无论是从 SharePoint 文档库打开，还是从 Outlook 网页版打开，都能查看。</p>
+<p>若要安装语言包，请按以下步骤操作。</p>
+<ol>
+<li>从 <a href="http://go.microsoft.com/fwlink/p/?LinkId=798136" target="_blank" rel="noopener">Microsoft 下载中心</a>下载 Office Online Server。</li>
+<li>运行 <strong>wacserverlanguagepack.exe</strong>。</li>
+<li>在 Office Online Server 语言包向导中的” <strong>阅读 Microsoft 软件许可条款</strong>“页面上，选择” <strong>我接受此协议的条款</strong>“，然后选择” <strong>继续</strong>“。</li>
+<li>在安装程序安装完 Office Online Server 后，选择” <strong>关闭</strong>“。</li>
+</ol>
+<p>若要<strong>修补语言包</strong>，可在安装 Office Online 语言包后部署 Office 在线更新。</p>
+<p> 重要</p>
+<p>若要在创建 Office Online Server 场后安装语言包，必须从场中删除一个服务器，将语言包安装在该服务器上，然后再将该服务器添加回场。&gt; 要使语言包正常工作，您需要在服务器场中的所有服务器上进行安装。</p>
+<h2 id="部署-Office-Online-Server-场"><a href="#部署-Office-Online-Server-场" class="headerlink" title="部署 Office Online Server 场"></a>部署 Office Online Server 场</h2><p>按照下面三节中任意一节的程序进行操作，具体取决于您想创建的 Office Online Server 场类型。</p>
+<p> 提示</p>
+<p>如果 Microsoft PowerShell 在您运行时无法识别 <strong>New-OfficeWebAppsFarm</strong> cmdlet，您可能需要导入 <strong>OfficeWebApps</strong> 模块。请使用此命令：&gt; <code>Import-Module -Name OfficeWebApps</code></p>
+<h3 id="部署使用-HTTP-的单服务器-Office-Online-Server-场"><a href="#部署使用-HTTP-的单服务器-Office-Online-Server-场" class="headerlink" title="部署使用 HTTP 的单服务器 Office Online Server 场"></a>部署使用 HTTP 的单服务器 Office Online Server 场</h3><p>如果您仅将 Office Online Server 部署用于测试或内部使用，并且您不需要向 Skype for Business Server 2015 提供 Office Online Server 功能，则此程序适合您。您将安装使用 HTTP 的、包含一台服务器的 Office Online Server 场。您不需要证书或负载平衡器，但需要不运行任何其他服务器应用程序的专用物理服务器或虚拟机实例。</p>
+<p>可以使用此 Office Online Server 场，为 SharePoint Server 2016 和 Exchange Server 2016 提供 Office Online 功能。</p>
+<p> 备注</p>
+<p>无论是何环境，强烈建议使用 HTTPS (TLS)，因为 Office Online Server 使用 OAuth 令牌与外部服务（如 SharePoint 或 Exchange Server）通信。OAuth 令牌包含可能会被攻击者拦截并重播的信息。如果成功攻击，攻击者就会获得与用户相同的权限，可以向 Office Online Server 发出请求。</p>
+<h4 id="第-1-步：创建-Office-Online-Server-场"><a href="#第-1-步：创建-Office-Online-Server-场" class="headerlink" title="第 1 步：创建 Office Online Server 场"></a>第 1 步：创建 Office Online Server 场</h4><p>使用 <strong>New-OfficeWebAppsFarm</strong> 命令创建一个包含一台服务器的新 Office Online Server 场，如以下示例中所示。</p>
+<pre><code>New-OfficeWebAppsFarm -InternalURL &quot;http://servername&quot; -AllowHttp -EditingEnabled</code></pre><p><strong>参数</strong></p>
+<ul>
+<li><strong>-InternalURL</strong> 是运行 Office Online Server 的服务器名称，例如 <strong><a href="http://servername" target="_blank" rel="noopener">http://servername</a></strong>。</li>
+<li><strong>-AllowHttp</strong> 配置要使用 HTTP 的场。</li>
+<li><strong>-EditingEnabled</strong> 在 Office Online 中启用编辑（如果它与 SharePoint Server 2016 一起使用）。Skype for Business Server 2015 或 Exchange Server 不使用此参数，因为这些主机不支持编辑。</li>
+</ul>
+<h4 id="步骤-2：验证是否成功创建-Office-Online-Server-场"><a href="#步骤-2：验证是否成功创建-Office-Online-Server-场" class="headerlink" title="步骤 2：验证是否成功创建 Office Online Server 场"></a>步骤 2：验证是否成功创建 Office Online Server 场</h4><p>在创建服务器场后，将在 Microsoft PowerShell 提示符中显示有关服务器场的详细信息。若要验证是否正确安装并配置了 Office Online Server，请使用 Web 浏览器访问 Office Online Server 发现 URL，如下面的示例所示。发现 URL 是您在配置 Office Online Server 服务器场时指定的 <em>InternalUrl</em> 参数，后跟 <strong>/hosting/discovery</strong>，例如：</p>
+<pre><code>http://servername/hosting/discovery</code></pre><p>如果 Office Online Server 按预期运行，您应该在 Web 浏览器中看到 Web 应用程序开放平台接口 (WOPI) 协议发现 XML 文件。该文件的前几行应类似以下示例。</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+- &lt;wopi-discovery&gt;
+- &lt;net-zone name=&quot;internal-http&quot;&gt;
+- &lt;app name=&quot;Excel&quot; favIconUrl=&quot;http://servername/x/_layouts/images/FavIcon_Excel.ico&quot; checkLicense=&quot;true&quot;&gt;
+&lt;action name=&quot;view&quot; ext=&quot;ods&quot; default=&quot;true&quot; urlsrc=&quot;http://servername/x/_layouts/xlviewerinternal.aspx?&lt;ui=UI_LLCC&amp;amp;&gt;&lt;rs=DC_LLCC&amp;amp;&gt;&quot; /&gt; 
+&lt;action name=&quot;view&quot; ext=&quot;xls&quot; default=&quot;true&quot; urlsrc=&quot;http://servername/x/_layouts/xlviewerinternal.aspx?&lt;ui=UI_LLCC&amp;amp;&gt;&lt;rs=DC_LLCC&amp;amp;&gt;&quot; /&gt; 
+&lt;action name=&quot;view&quot; ext=&quot;xlsb&quot; default=&quot;true&quot; urlsrc=&quot;http://servername/x/_layouts/xlviewerinternal.aspx?&lt;ui=UI_LLCC&amp;amp;&gt;&lt;rs=DC_LLCC&amp;amp;&gt;&quot; /&gt; 
+&lt;action name=&quot;view&quot; ext=&quot;xlsm&quot; default=&quot;true&quot; urlsrc=&quot;http://servername/x/_layouts/xlviewerinternal.aspx?&lt;ui=UI_LLCC&amp;amp;&gt;&lt;rs=DC_LLCC&amp;amp;&gt;&quot; /&gt; </code></pre><h4 id="步骤-3：配置-Secure-Store-访问（可选）"><a href="#步骤-3：配置-Secure-Store-访问（可选）" class="headerlink" title="步骤 3：配置 Secure Store 访问（可选）"></a>步骤 3：配置 Secure Store 访问（可选）</h4><p>如果计划使用 HTTP 环境中 SharePoint 服务器的 Secure Store Service，则需要设置可启用此服务的参数。（如果未计划将 SharePoint 服务器中的 Secure Store 与 Excel Online 一起使用，则可跳过此步骤。）</p>
+<p>当 Office Online Server 试图刷新工作簿或存储在 HTTP 路径中的 ODC 文件的数据时，如果尚未配置 Office Online Server 以允许通过 HTTP 的 Secure Store 连接，则数据刷新将失败。</p>
+<p>使用 Set-OfficeWebAppsFarm cmdlet 配置通过 HTTP 的 Secure Store 设置：</p>
+<pre><code>Set-OfficeWebAppsFarm -AllowHttpSecureStoreConnections:$true</code></pre><p>请记住将通过 HTTP 以明文形式传送工作簿的内容或 ODC 文件。数据连接工作簿和 ODC 文件包含数据库连接信息，并可以包含密码。</p>
+<h4 id="步骤-4：配置主机"><a href="#步骤-4：配置主机" class="headerlink" title="步骤 4：配置主机"></a>步骤 4：配置主机</h4><p>服务器场现在已经可以通过 HTTP 为主机提供 Office Online 功能。有关如何配置主机的详细信息，请查阅以下文章。</p>
+<ul>
+<li><a href="https://docs.microsoft.com/zh-cn/officeonlineserver/configure-office-online-server-for-sharepoint-server-2016/configure-office-online-server-for-sharepoint-server-2016" target="_blank" rel="noopener">配置 SharePoint Server 2016 的 Office Online Server</a></li>
+<li><a href="https://go.microsoft.com/fwlink/p/?LinkId=620075" target="_blank" rel="noopener">Office Online Server integration with Exchange</a>（Office Online Server 与 Exchange 的集成）</li>
+</ul>
+<h3 id="部署使用-HTTPS-的单服务器-Office-Online-Server-场"><a href="#部署使用-HTTPS-的单服务器-Office-Online-Server-场" class="headerlink" title="部署使用 HTTPS 的单服务器 Office Online Server 场"></a>部署使用 HTTPS 的单服务器 Office Online Server 场</h3><p>对于大多数生产环境，强烈建议对其安全功能使用 HTTPS。同样，如果要向 Skype for Business Server 2015 提供 Office Online Server 功能，则需要 HTTPS，这样用户便可在浏览器中查看 PowerPoint 广播。此处将介绍如何安装使用 HTTPS 的单服务器 Office Online Server 场。需要在服务器上安装证书。</p>
+<p>此 Office Online Server 场将向 SharePoint Server 2016、Skype for Business Server 2015 和 Exchange Server 2016 提供 Office Online 功能。</p>
+<h4 id="步骤-1：创建-Office-Online-Server-场"><a href="#步骤-1：创建-Office-Online-Server-场" class="headerlink" title="步骤 1：创建 Office Online Server 场"></a>步骤 1：创建 Office Online Server 场</h4><p>使用 <strong>New-OfficeWebAppsFarm</strong> 命令创建一个包含一台服务器的新 Office Online Server 场，如以下示例中所示。</p>
+<pre><code>New-OfficeWebAppsFarm -InternalUrl &quot;https://server.contoso.com&quot; -ExternalUrl &quot;https://wacweb01.contoso.com&quot; -CertificateName &quot;OfficeWebApps Certificate&quot; -EditingEnabled</code></pre><p><strong>参数</strong></p>
+<ul>
+<li><strong>-InternalURL</strong> 是运行 Office Online Server 服务器完全限定的域名 (FQDN)，如 <strong><a href="http://servername.contoso.com" target="_blank" rel="noopener">http://servername.contoso.com</a></strong>。</li>
+<li><strong>-ExternalURL</strong> 是可以在 Internet 上访问的 FQDN。</li>
+<li><strong>-CertificateName</strong> 是证书的友好名称。</li>
+<li><strong>-EditingEnabled</strong> 为可选，它在 Office Online 中启用编辑（如果它与 SharePoint Server 2016 一起使用）。Skype for Business Server 2015 或 Exchange Server 不使用此参数，因为这些主机不支持编辑。</li>
+</ul>
+<h4 id="步骤-2：验证是否成功创建-Office-Online-Server-场-1"><a href="#步骤-2：验证是否成功创建-Office-Online-Server-场-1" class="headerlink" title="步骤 2：验证是否成功创建 Office Online Server 场"></a>步骤 2：验证是否成功创建 Office Online Server 场</h4><p>在创建服务器场后，将在 Microsoft PowerShell 提示符中显示有关服务器场的详细信息。若要验证是否正确安装并配置了 Office Online Server，请使用 Web 浏览器访问 Office Online Server 发现 URL，如下面的示例所示。发现 URL 是您在配置 Office Online Server 服务器场时指定的 <em>InternalUrl</em> 参数，后跟 <strong>/hosting/discovery</strong>，例如：</p>
+<pre><code>https://server.contoso.com/hosting/discovery</code></pre><p>如果 Office Online Server 按预期运行，您应该在 Web 浏览器中看到 Web 应用程序开放平台接口 (WOPI) 协议发现 XML 文件。该文件的前几行应类似以下示例。</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;wopi-discovery&gt;&lt;net-zone 
+name=&quot;internal-https&quot;&gt;&lt;app name=&quot;Excel&quot; checkLicense=&quot;true&quot; 
+favIconUrl=&quot;https://wac.contoso.com/x/_layouts/images/FavIcon_Excel.ico&quot;&gt;&lt;action 
+name=&quot;view&quot; 
+urlsrc=&quot;https://wac.contoso.com/x/_layouts/xlviewerinternal.aspx?&lt;ui=UI_LLCC&amp;amp;&gt;&lt;rs=DC_LLCC&amp;amp;&gt;&quot; 
+default=&quot;true&quot; ext=&quot;ods&quot;/&gt;&lt;action name=&quot;view&quot; 
+urlsrc=&quot;https://wac.contoso.com/x/_layouts/xlviewerinternal.aspx?&lt;ui=UI_LLCC&amp;amp;&gt;&lt;rs=DC_LLCC&amp;amp;&gt;&quot; 
+default=&quot;true&quot; ext=&quot;xls&quot;/&gt;&lt;action name=&quot;view&quot;
+</code></pre><p>根据您的 Web 浏览器的安全设置，您可能会在发现 XML 文件的内容显示之前看到提示您选择”显示所有内容”的消息。</p>
+<h4 id="步骤-3：配置主机"><a href="#步骤-3：配置主机" class="headerlink" title="步骤 3：配置主机"></a>步骤 3：配置主机</h4><p>服务器场现在已经可以通过 HTTPS 为主机提供 Office Online 功能。有关如何配置主机的详细信息，请查阅以下文章。</p>
+<ul>
+<li><a href="https://docs.microsoft.com/zh-cn/officeonlineserver/configure-office-online-server-for-sharepoint-server-2016/configure-office-online-server-for-sharepoint-server-2016" target="_blank" rel="noopener">配置 SharePoint Server 2016 的 Office Online Server</a></li>
+<li><a href="https://go.microsoft.com/fwlink/p/?LinkId=620075" target="_blank" rel="noopener">Office Online Server integration with Exchange</a>（Office Online Server 与 Exchange 的集成）</li>
+</ul>
+<h3 id="部署使用-HTTPS-的多服务器负载平衡-Office-Online-Server-场"><a href="#部署使用-HTTPS-的多服务器负载平衡-Office-Online-Server-场" class="headerlink" title="部署使用 HTTPS 的多服务器负载平衡 Office Online Server 场"></a>部署使用 HTTPS 的多服务器负载平衡 Office Online Server 场</h3><p>如果预计 Office Online Server 场流量很大，并且希望其通过 Internet 且在内部网络中可用，则应使用此类型的拓扑。本节介绍如何安装使用负载平衡器和 HTTPS 的多服务器 Office Online Server 场。</p>
+<p>在开始之前，请确保已配置负载平衡器。此外，需要在负载平衡器上安装一个证书。此 Office Online Server 场将为 SharePoint Server 2016、Skype for Business Server 2015 和 Exchange Server 2016 提供 Office Online 功能。</p>
+<h4 id="步骤-1：在第一台服务器上创建-Office-Online-Server-场"><a href="#步骤-1：在第一台服务器上创建-Office-Online-Server-场" class="headerlink" title="步骤 1：在第一台服务器上创建 Office Online Server 场"></a>步骤 1：在第一台服务器上创建 Office Online Server 场</h4><p>使用 <strong>New-OfficeWebAppsFarm</strong> 命令在第一台服务器上创建的新 Office Online Server 场，如以下示例中所示。</p>
+<pre><code>New-OfficeWebAppsFarm -InternalUrl &quot;https://server.contoso.com&quot; -ExternalUrl &quot;https://wacweb01.contoso.com&quot; -SSLOffloaded -EditingEnabled</code></pre><p><strong>参数</strong></p>
+<ul>
+<li><strong>-InternalURL</strong> 是运行 Office Online Server 服务器完全限定的域名 (FQDN)，如 <strong><a href="http://servername.contoso.com" target="_blank" rel="noopener">http://servername.contoso.com</a></strong>。</li>
+<li><strong>-ExternalURL</strong> 是可以在 Internet 上访问的 FQDN 名称。</li>
+<li><strong>-SSLOffloaded</strong> 允许卸载到负载平衡器的 SSL 端接。</li>
+<li><strong>-EditingEnabled</strong> 为可选，它在 Office Online 中启用编辑（如果它与 SharePoint Server 2016 一起使用）。Skype for Business Server 2015 或 Exchange Server 不使用此参数，因为这些主机不支持编辑。</li>
+</ul>
+<h4 id="步骤-2：向服务器场中添加更多服务器"><a href="#步骤-2：向服务器场中添加更多服务器" class="headerlink" title="步骤 2：向服务器场中添加更多服务器"></a>步骤 2：向服务器场中添加更多服务器</h4><p>第一台服务器运行 Office Online Server 后，在您要添加到 Office Online Server 服务器场中的每台服务器上运行 <strong>New-OfficeWebAppsMachine</strong> 命令。对于 <strong>-MachineToJoin</strong> 参数，请使用已存在于 Office Online Server 服务器场中的某台服务器的计算机名称。例如，如果 server1.contoso.com 已位于服务器场中，请使用以下名称：</p>
+<pre><code>New-OfficeWebAppsMachine -MachineToJoin &quot;server1.contoso.com&quot;</code></pre><h4 id="步骤-3：验证是否成功创建-Office-Online-Server-场"><a href="#步骤-3：验证是否成功创建-Office-Online-Server-场" class="headerlink" title="步骤 3：验证是否成功创建 Office Online Server 场"></a>步骤 3：验证是否成功创建 Office Online Server 场</h4><p>在创建服务器场后，将在 Microsoft PowerShell 提示符中显示有关服务器场的详细信息。若要验证是否正确安装并配置了 Office Online Server，请使用 Web 浏览器访问 Office Online Server 发现 URL，如下面的示例所示。发现 URL 是您在配置 Office Online Server 服务器场时指定的 <em>InternalUrl</em> 参数，后跟 <strong>/hosting/discovery</strong>，例如：</p>
+<pre><code>https://server.contoso.com/hosting/discovery</code></pre><p>如果 Office Online Server 按预期运行，您应该在 Web 浏览器中看到 Web 应用程序开放平台接口 (WOPI) 协议发现 XML 文件。该文件的前几行应类似以下示例。</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;wopi-discovery&gt;&lt;net-zone name=&quot;internal-https&quot;&gt;&lt;app name=&quot;Excel&quot; checkLicense=&quot;true&quot; favIconUrl=&quot;https://officewebapps.contoso.com/x/_layouts/images/FavIcon_Excel.ico&quot;&gt;&lt;action name=&quot;view&quot; urlsrc=&quot;https://officewebapps.contoso.com/x/_layouts/xlviewerinternal.aspx?&lt;ui=UI_LLCC&amp;amp;&gt;&lt;rs=DC_LLCC&amp;amp;&gt;&quot; default=&quot;true&quot; ext=&quot;ods&quot;/&gt;&lt;action name=&quot;view&quot; urlsrc=&quot;https://officewebapps.contoso.com/x/_layouts/xlviewerinternal.aspx?&lt;ui=UI_LLCC&amp;amp;&gt;&lt;rs=DC_LLCC&amp;amp;&gt;&quot; default=&quot;true&quot; ext=&quot;xls&quot;/&gt;&lt;action name=&quot;view&quot; urlsrc=&quot;https://officewebapps.contoso.com/x/_layouts/xlviewerinternal.aspx?&lt;ui=UI_LLCC&amp;amp;&gt;&lt;rs=DC_LLCC&amp;amp;&gt;&quot; default=&quot;true&quot; ext=&quot;xlsb&quot;/&gt; </code></pre><p> 备注</p>
+<p>根据您的 Web 浏览器的安全设置，您可能会在发现 XML 文件的内容显示之前看到提示您选择”显示所有内容”的消息。</p>
+<h4 id="步骤-4：配置主机-1"><a href="#步骤-4：配置主机-1" class="headerlink" title="步骤 4：配置主机"></a>步骤 4：配置主机</h4><p>服务器场现在已经可以通过 HTTPS 为主机提供 Office Online 功能。有关如何配置主机的详细信息，请查阅以下文章。</p>
+<ul>
+<li><a href="https://docs.microsoft.com/zh-cn/officeonlineserver/configure-office-online-server-for-sharepoint-server-2016/configure-office-online-server-for-sharepoint-server-2016" target="_blank" rel="noopener">配置 SharePoint Server 2016 的 Office Online Server</a></li>
+<li><a href="https://go.microsoft.com/fwlink/p/?LinkId=620075" target="_blank" rel="noopener">Office Online Server integration with Exchange</a>（Office Online Server 与 Exchange 的集成）</li>
+</ul>
+<h2 id="如果您看到”500-Web-服务异常”或”500-21-内部服务器错误”消息"><a href="#如果您看到”500-Web-服务异常”或”500-21-内部服务器错误”消息" class="headerlink" title="如果您看到”500 Web 服务异常”或”500.21 - 内部服务器错误”消息"></a>如果您看到”500 Web 服务异常”或”500.21 - 内部服务器错误”消息</h2><p>如果安装后删除了 .NET Framework 4.6 的功能，在运行 OfficeWebApps cmdlet 时，你可能会看到”500 Web 服务异常”或”500.21 - 内部服务器错误”消息。若要解决此问题，请从提升的命令提示符运行以下示例命令来清理阻止 Office Online Server 正确运行的设置：</p>
+<p><strong>对于 Windows Server 2012 R2 或 Windows Server 2016</strong></p>
+<pre><code>Add-WindowsFeature NET-Framework-45-Core, NET-Framework-45-ASPNET, Web-Asp-Net45</code></pre><h2 id="另请参阅"><a href="#另请参阅" class="headerlink" title="另请参阅"></a>另请参阅</h2><p><a href="https://docs.microsoft.com/zh-cn/officeonlineserver/apply-software-updates-to-office-online-server" target="_blank" rel="noopener">将软件更新应用到 Office Online Server</a></p>
+<p><a href="https://docs.microsoft.com/zh-cn/officeonlineserver/office-online-server-release-schedule" target="_blank" rel="noopener">Office 联机服务器发布计划</a></p>
+<p><a href="https://docs.microsoft.com/zh-CN/officeonlineserver/plan-office-online-server" target="_blank" rel="noopener">计划 Office Online Server</a></p>
+
+        </div>
+        <!-- .entry-content -->
+        <div class="single-reward">
+          <div class="reward-open">赏<div class="reward-main">
+              <ul class="reward-row">
+                <li class="alipay-code"><img src="undefined"></li>
+                <li class="wechat-code"><img src="undefined"></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
+        <footer class="post-footer">
+          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
+          <div class="post-tags">
+          </div>
+          <div class="post-share">
+            <div class="social-share sharehidden share-component"></div>
+            <i class="iconfont show-share icon-forward"></i>
+          </div>
+        </footer><!-- .entry-footer -->
+      </article>
+      <!-- #post-## -->
+      <div class="toc" style="background: none;"></div>
+      <section class="post-squares nextprev">
+        
+          
+            <div class="post-nepre half previous">
+          
+            <a href="/2019/11/29/apache服务器伪静态规则教程/" rel="prev">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/loader/orange.progress-bar-stripe-loader.svg" data-src="" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="">
+              </div>
+              <span class="label">
+              Previous Post</span>
+              <div class="info">
+                <h3>
+                apache服务器伪静态规则教程</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+        
+          
+            <div class="post-nepre half next">
+          
+            <a href="/2019/11/26/MySQL-JSON类型/" rel="next">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/loader/orange.progress-bar-stripe-loader.svg" data-src="" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="">
+              </div>
+              <span class="label">
+              Next Post</span>
+              <div class="info">
+                <h3>
+                MySQL JSON类型</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+      </section>
+      
+<div id="vcomments"></div>
+<script>
+  window.onload = function(){
+      var valine = new Valine();
+      valine.init({
+        el: '#vcomments',
+        appId: "4cWxpNhgVTm5dJrnWGU1zpUS-MdYXbMMI",
+        appKey: "9ukWp1RJdcqihwVgnvWTKt5N",
+        path: window.location.pathname,
+        placeholder: "你是我一生只会遇见一次的惊喜 ..."
+      })
+  }
+</script>
+
+      <section class="author-profile">
+        <div class="info" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <a href="mwx-lh.com" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/mwx2006/Img/avatar.jpg" itemprop="image" alt="MWX" height="70" width="70"></a>
+          <div class="meta">
+            <span class="title">Author</span>
+            <h3 itemprop="name">
+            <a href="mwx-lh.com" itemprop="url" rel="author">MWX</a>
+            </h3>
+          </div>
+        </div>
+        <hr>
+        <p><i class="iconfont icon-write"></i>MWX</p>
+      </section>
+    </main><!-- #main -->
+  </div><!-- #primary -->
+</div>
+
+
+
+    </div>    
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="请输入关键词..."/>
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            // PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+    <!-- <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 MWX<br>
+      powered_by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer> -->
+<footer id="colophon" class="site-footer" role="contentinfo">
+  <div class="site-info">
+    <div class="footertext">
+      <div class="img-preload">
+        <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/wordpress-rotating-ball-o.svg">
+        <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/disqus-preloader.svg">
+      </div>
+      <p style="color: #666666;">&copy MWX 2018-2020</p>
+    </div>
+    <div class="footer-device">
+    <p style="font-family: 'Ubuntu', sans-serif;">
+        <span style="color: #b9b9b9;"> <i class="iconfont icon-sakura rotating" style="color: #ffc0cb;display:inline-block"></i>Powered by Hexo
+        </span>
+      </p>
+    </div>
+  </div><!-- .site-info -->
+</footer>
+
+
+
+<!-- <script src="/js/tocbot.js"></script> -->
+<script type="text/javascript" src="/js/lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script type="text/javascript" src="/js/InsightSearch.js"></script>
+<script type="text/javascript" src="/js/jquery.fancybox.min.js"></script>
+<script type="text/javascript" src="/js/zoom.min.js"></script>
+<script type="text/javascript" src="/js/sakura-app.js"></script>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine@1.3.4/dist/Valine.min.js'></script>
+<!-- 不蒜子 网页计数器 -->
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script> -->
+<script type="text/javascript">
+/* <![CDATA[ */
+if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  var Poi = {"pjax":"1","movies":{"url": "https://cdn.jsdelivr.net/gh/honjun/hojun@1.2","name":"Unbroken.mp4","live":"close"},"windowheight":"fixed","codelamp":"close","ajaxurl":"","order":"asc","formpostion":"bottom"};
+} else {
+  var Poi = {"pjax":"1","movies":{"url": "https://cdn.jsdelivr.net/gh/honjun/hojun@1.2","name":"Unbroken.mp4","live":"open"},"windowheight":"auto","codelamp":"close","ajaxurl":"","order":"asc","formpostion":"bottom"};
+}
+/* ]]> */
+
+</script>
+<script>
+$(document).ready(function() {
+  if ($(".toc").length > 0 && document.body.clientWidth > 1200) {
+    if ($(".pattern-center").length > 0) { //有图的情况
+      tocbot.init({
+          // Where to render the table of contents.
+          tocSelector: '.toc', // 放置目录的容器
+          // Where to grab the headings to build the table of contents.
+          contentSelector: '.entry-content', // 正文内容所在
+          // Which headings to grab inside of the contentSelector element.
+          scrollSmooth: true,
+          headingSelector: 'h1, h2, h3, h4, h5', // 需要索引的标题级别
+          headingsOffset: -400,
+          scrollSmoothOffset: -85
+      });
+    } else {
+      tocbot.init({
+          // Where to render the table of contents.
+          tocSelector: '.toc', // 放置目录的容器
+          // Where to grab the headings to build the table of contents.
+          contentSelector: '.entry-content', // 正文内容所在
+          // Which headings to grab inside of the contentSelector element.
+          scrollSmooth: true,
+          headingSelector: 'h1, h2, h3, h4, h5', // 需要索引的标题级别
+          headingsOffset: -85,
+          scrollSmoothOffset: -85
+      });
+    }
+    var offsetTop = $('.toc').offset().top - 95;
+    window.onscroll = function() {
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+      if (scrollTop >= offsetTop) {
+        $('.toc').addClass('toc-fixed');
+      } else {
+        $('.toc').removeClass('toc-fixed');
+      }
+    }
+  }
+});
+</script>
+<script>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+  <div id="landlord">
+      <div class="message" style="opacity:0"></div>
+      <canvas id="live2d" width="280" height="250" class="live2d"></canvas>
+      <div class="hide-button">隐藏</div>
+  </div>
+  <script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+  <script type="text/javascript">
+      var message_Path = '/live2d/'
+      var home_Path = 'https://mwx-lh.com/'
+  </script>
+  <script type="text/javascript" src="/live2d/js/live2d.js"></script>
+  <script type="text/javascript" src="/live2d/js/message.js"></script>
+  <script type="text/javascript">
+      loadlive2d("live2d", "/live2d/model/tianyi/model.json");
+  </script>
+    <div class="openNav no-select" style="height: 50px;">
+      <div class="iconflat no-select" style="width: 50px; height: 50px;">
+        <div class="icon"></div>
+      </div>
+      <div class="site-branding search-form-submit">
+        <i class="iconfont js-toggle-search iconsearch icon-search"></i>
+      </div>
+    </div>
+  </section>
+  <div id="mo-nav" class="">
+  <div class="m-avatar">
+    <img src="https://cdn.jsdelivr.net/gh/mwx2006/Img/avatar.jpg">
+  </div>
+  <p style="text-align: center; color: #333; font-weight: 900; font-family: 'Ubuntu', sans-serif; letter-spacing: 1.5px">暗雨-MWX</p>
+  <p style="text-align: center; word-spacing: 20px;">
+    
+      
+        <a href="http://github.com/mwx2006" class="fa fa-github" target="_blank" style="color: #333; margin-left:20px"></a>
+      
+        <a href="https://t.me/joinchat/Obf09BP1q8SnCix5qkar9A" class="fa fa-telegram" target="_blank" style="color: #dd4b39; margin-left:20px"></a>
+      
+        <a href="http://qm.qq.com/cgi-bin/qm/qr?k=Tj5T5LysTQroRCqThEKXCEPmLmsGXYo2&authKey=muD25VZa16FTcJFFtx4xMnu7JKR1BioQJ4SGrid%2FHvIrCTWZKZFFuLF%2F0fhgG5LQ&group_code=930178809" class="fa fa-qq" target="_blank" style="color: #25c6fe; margin-left:20px"></a>
+      
+    
+  </p>
+  <ul id="menu-new-1" class="menu">
+    
+      <li>
+        <a href="/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-fort-awesome faa-shake" aria-hidden="true"></i>
+            首页
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/archives">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-archive faa-shake" aria-hidden="true"></i>
+            归档
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/links/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-link faa-shake" aria-hidden="true"></i>
+            友人帐
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/donate/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-heart faa-pulse" aria-hidden="true"></i>
+            赞赏
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-leaf faa-wrench" aria-hidden="true"></i>
+            关于
+          </span>
+        </a>
+        
+          <ul class="sub-menu">
+            
+              <li>
+                <a href="/about/">
+                  <i class="fa fa-meetup" aria-hidden="true"></i>
+                  我？
+                </a>
+              </li>
+            
+              <li>
+                <a href="/theme-sakura/">
+                  <i class="fa iconfont icon-sakura" aria-hidden="true"></i>
+                  主题
+                </a>
+              </li>
+            
+              <li>
+                <a href="/lab/">
+                  <i class="fa fa-cogs" aria-hidden="true"></i>
+                  Lab
+                </a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+      <li>
+        <a href="/atom.xml">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-rss faa-pulse" aria-hidden="true"></i>
+            RSS
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/mc/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
+            我的世界
+          </span>
+        </a>
+        
+      </li>
+    
+  </ul>
+  <p style="text-align: center; font-size: 13px; color: #b9b9b9;">&copy 2019 MWX</p>
+</div>
+<button onclick="topFunction()" class="mobile-cd-top" id="moblieGoTop" title="Go to top" style="display: none;"><i class="fa fa-chevron-up" aria-hidden="true"></i></button>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+<style>
+  .aplayer .aplayer-lrc {
+    height: 35px;
+  }
+  .aplayer .aplayer-lrc p{
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 18px !important;
+  }
+  .aplayer .aplayer-lrc p.aplayer-lrc-current{
+    color: #FF1493;
+  }
+  .aplayer.aplayer-narrow .aplayer-body{
+    left: -66px !important;
+  }
+  .aplayer.aplayer-fixed .aplayer-lrc {
+    display: none;
+  }
+  .aplayer .aplayer-lrc.aplayer-lrc-hide {
+      display:none !important;
+  }
+  .aplayer.aplayer-fixed .lrc-show {
+    display: block;
+    background: rgba(255, 255, 255, 0.8);
+  }
+</style>
+<div class="aplayer"
+
+    data-id="885893447"
+
+    data-server="netease"
+
+    data-type="playlist"
+
+    data-fixed="true"
+
+    data-autoplay="false"
+
+    data-loop="all"
+
+    data-order="random"
+
+    data-preload="auto"
+
+    data-volume="0.7"
+
+    data-mutex="true"
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
+<script>
+  $(function(){
+    $('body').on('click', '.aplayer', function(){
+      if($('.aplayer-button').hasClass('aplayer-play')) {
+        $('.aplayer-lrc').removeClass('lrc-show');
+      } else {
+        $('.aplayer-lrc').addClass('lrc-show');
+      }
+    })
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  
+  <title itemprop="name">MySQL JSON类型 | MWX</title>
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+SerifMerriweather|Merriweather+Sans|Source+Code+Pro|Ubuntu:400,700|Noto+Serif+SC" media="all">
+  <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+  <link rel="stylesheet" id="saukra_css-css" href="/css/style.css" type="text/css" media="all">
+  <link rel="stylesheet" href="/css/lib.min.css" media="all">
+  <link rel="stylesheet" href="/css/font.css" media="all">
+  <link rel="stylesheet" href="/css/insight.css" media="all">
+  <link rel="stylesheet" href="/css/jquery.fancybox.min.css" media="all">
+  <link rel="stylesheet" href="/css/zoom.css" media="all">
+  <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+  <link rel="stylesheet" href="/live2d/css/live2d.css">
+
+<!--   <link rel="stylesheet" id="saukra_css-css" href="https://2heng.xin/wp-content/cache/autoptimize/css/autoptimize_ad42a61f4c7d4bdd9f91afcff6b5dda5.css
+" type="text/css" media="all"> -->
+  <script>
+  /*Initial Variables*/
+  var mashiro_option = new Object();
+  var mashiro_global = new Object();
+  mashiro_option.NProgressON = true;
+  /* 
+   * 邮箱信息之类的东西可以填在这里，这些js变量基本都作用于sakura-app.js
+   * 这样的设置仅是为了方便在基于PHP开发的主题中设置js变量，既然移植到了Node上，我想或许可以精简这一逻辑吧
+   */
+  mashiro_option.email_domain = "";
+  mashiro_option.email_name = "";
+  mashiro_option.cookie_version_control = "";
+  mashiro_option.qzone_autocomplete = false;
+  mashiro_option.site_name = "暗雨-MWX";
+  mashiro_option.author_name = "MWX";
+  mashiro_option.site_url = "https://mwx-lh.com";
+  mashiro_option.v_appId = "4cWxpNhgVTm5dJrnWGU1zpUS-MdYXbMMI";
+  mashiro_option.v_appKey = "9ukWp1RJdcqihwVgnvWTKt5N";
+  mashiro_option.mathjax = "0";
+  mashiro_option.qq_api_url = "https://api.mashiro.top/qqinfo/"; 
+  mashiro_option.qq_avatar_api_url = "https://api.mashiro.top/qqinfo/";
+
+  // mashiro_option.jsdelivr_css_src = "https://cdn.jsdelivr.net/gh/moezx/cdn@3.4.5/css/lib.min.css";
+  // mashiro_option.float_player_on = true;
+
+  /*End of Initial Variables*/
+  </script>
+  <script type="text/javascript">
+  var bg = "https://cdn.jsdelivr.net/gh/mwx2006/Img@master/cover/(1).jpg.webp,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/cover/(2).jpg.webp,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/cover/(3).jpg.webp,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/cover/(4).jpg.webp,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/cover/(5).jpg.webp,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/cover/(6).jpg.webp,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/cover/(7).jpg.webp,https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/cover/(8).jpg.webp,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_01.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_02.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_03.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_04.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_05.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_06.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_07.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_08.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_09.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_10.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_11.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_12.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_13.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_14.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_15.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_16.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_17.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_18.jpg".split(",");
+  var bgindex = Math.floor(Math.random()*bg.length);
+  if (!!window.ActiveXObject || "ActiveXObject" in window) { //is IE?
+    alert('朋友，IE浏览器未适配哦~');
+  }
+  </script>
+  <style type="text/css">
+  .hljs-ln{border-collapse:collapse}.hljs-ln td{padding:0}.hljs-ln-n:before{content:attr(data-line-number)}
+  </style>
+  <style type="text/css">.site-top .lower nav{display:block !important;}.author-profile i,.post-like a,.post-share .show-share,.sub-text,.we-info a,span.sitename,.post-more i:hover,#pagination a:hover,.post-content a:hover,.float-content i:hover{color:#FE9600}.feature i,.download,.navigator i:hover,.links ul li:before,.ar-time i,span.ar-circle,.object,.comment .comment-reply-link,.siren-checkbox-radio:checked + .siren-checkbox-radioInput:after{background:#FE9600}::-webkit-scrollbar-thumb{background:#FE9600}.download,.navigator i:hover,.link-title,.links ul li:hover,#pagination a:hover,.comment-respond input[type='submit']:hover{border-color:#FE9600}.entry-content a:hover,.site-info a:hover,.comment h4 a,#comments-navi a.prev,#comments-navi a.next,.comment h4 a:hover,.site-top ul li a:hover,.entry-title a:hover,#archives-temp h3,span.page-numbers.current,.sorry li a:hover,.site-title a:hover,i.iconfont.js-toggle-search.iconsearch:hover,.comment-respond input[type='submit']:hover{color:#FE9600}.comments .comments-main{display:block !important;}.comments .comments-hidden{display:none !important;}background-position:center center;background-attachment:inherit;}
+  </style>
+  <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?fdc45c4ded64e67bae4dac25882e0364";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<!--哀悼模式
+<style type="text/css">
+    html {
+    FILTER: gray;
+    -webkit-filter: grayscale(100%);
+    }
+</style>-->
+</head></html>
+<body class="page-template page-template-user page-template-page-analytics page-template-userpage-analytics-php page page-id-1297 chinese-font serif isWebKit">
+  <div class="scrollbar" id="bar">
+  </div>
+  <a href="#" class="cd-top faa-float animated"></a>
+  <section id="main-container">
+    <div class="headertop filter-grid">
+  <div id="banner_wave_1"></div>
+  <div id="banner_wave_2"></div>
+  <figure id="centerbg" class="centerbg">
+    <div class="focusinfo no-select">
+      <div class="header-tou">
+        <a href="https://mwx-lh.com">
+          <img src="https://cdn.jsdelivr.net/gh/mwx2006/Img/avatar.jpg">
+        </a>
+      </div>
+      <div class="header-info">
+        <p>帷幕落下,喝彩响起,片刻后都沉寂.</p>
+        <div class="top-social_v2">
+          <li id="bg-pre">
+            <img class="flipx" src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/next-b.svg">
+          </li>
+          
+            
+              
+                <li>
+                  <a href="http://github.com/mwx2006" target="_blank" class="social-github" title="github">
+                    <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/social/github.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="https://weibo.com/mwx2006" target="_blank" class="social-github" title="sina">
+                    <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/social/sina.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="https://music.163.com/#/user/home?id=570158205" target="_blank" class="social-github" title="wangyiyun">
+                    <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/social/wangyiyun.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="https://t.me/joinchat/Obf09BP1q8SnCix5qkar9A" target="_blank" class="social-github" title="telegram">
+                    <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/social/telegram.svg">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="https://user.qzone.qq.com/2942799863" target="_blank" class="social-github" title="qzone">
+                    <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/social/qzone.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="mailto:2942799863@qq.com" target="_blank" class="social-github" title="email">
+                    <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/social/email.svg">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="//qm.qq.com/cgi-bin/qm/qr?k=m6GEN2Nsacav0YZL0tNH_fJIjhobCCu0&amp;authKey=U4jHIGQX1GgbMz5fjDiDhqfhuFOwDeK%2BH9%2BpEx8Y770t1BSnh0zO0uKljL1DAQIc&amp;group_code=827275454" target="_blank" class="social-github" title="qq">
+                    <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/social/qq.png">
+                  </a>
+                </li>
+              
+            
+          
+          <li id="bg-next">
+            <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/next-b.svg">
+          </li>
+        </div>
+      </div>
+    </div>
+  </figure>
+  <div id="video-container" style="">
+    <video style="object-fit: fill" id="bgvideo" class="video" video-name="" src="" width="auto" preload="auto">
+    </video>
+    <div id="video-btn" class="loadvideo videolive">
+    </div>
+    <div id="video-add">
+    </div>
+    <div class="video-stu">
+    </div>
+  </div>
+  <div class="headertop-down faa-float animated" onclick="headertop_down()">
+    <span>
+      <i class="fa fa-chevron-down" aria-hidden="true">
+      </i>
+    </span>
+  </div>
+</div>
+    <div id="page" class="site wrapper">
+      <header class="site-header no-select gizle sabit" role="banner">
+  <div class="site-top">
+    <div class="site-branding">
+      <span class="site-title">
+        <span class="logolink moe-mashiro">
+          <a href="/">
+            <span class="sakurasono">暗雨-</span>
+            <span class="shironeko">MWX</span>
+          </a>
+        </span>
+      </span>
+    </div>
+    <div class="searchbox search-form-submit">
+      <i class="iconfont js-toggle-search iconsearch icon-search">
+      </i>
+    </div>
+    <div id="show-nav" class="showNav mobile-fit">
+      <div class="line line1">
+      </div>
+      <div class="line line2">
+      </div>
+      <div class="line line3">
+      </div>
+    </div>
+    <div class="lower-cantiner">
+      <div class="lower">
+        <nav class="mobile-fit-control hide">
+          <ul id="menu-new" class="menu">
+            
+              <li>
+                <a href="/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-fort-awesome faa-shake" aria-hidden="true"></i>
+                    首页
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-archive faa-shake" aria-hidden="true"></i>
+                    归档
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/links/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-link faa-shake" aria-hidden="true"></i>
+                    友人帐
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/donate/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-heart faa-pulse" aria-hidden="true"></i>
+                    赞赏
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-leaf faa-wrench" aria-hidden="true"></i>
+                    关于
+                  </span>
+                </a>
+                
+                  <ul class="sub-menu">
+                    
+                      <li>
+                        <a href="/about/">
+                          <i class="fa fa-meetup" aria-hidden="true"></i>
+                          我？
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/theme-sakura/">
+                          <i class="fa iconfont icon-sakura" aria-hidden="true"></i>
+                          主题
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/lab/">
+                          <i class="fa fa-cogs" aria-hidden="true"></i>
+                          Lab
+                        </a>
+                      </li>
+                    
+                  </ul>
+                
+              </li>
+            
+              <li>
+                <a href="/atom.xml">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-rss faa-pulse" aria-hidden="true"></i>
+                    RSS
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/mc/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
+                    我的世界
+                  </span>
+                </a>
+                
+              </li>
+            
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script src="/js/adview_pic_cpc_cpm_cpa_guanggao_gg_ads_300x250_adsbygoogle.js" type="text/javascript"></script> 
+    <script type="text/javascript">
+    if (typeof(killads)=='undefined'){alert('广告被过滤');alert('请把本站加入广告过滤白名单');alert('谢谢');}
+    </script>
+
+</header>
+
+      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
+<div class="pattern-center-blank"></div>
+
+<div id="content" class="site-content">
+  <div id="primary" class="content-area">
+    <main id="main" class="site-main" role="main">
+      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+        <div class="toc"></div>
+        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
+        
+          <header class="entry-header">
+            <h1 class="entry-title">MySQL JSON类型</h1>
+            <p class="entry-census">MWX&nbsp;·&nbsp;2019-11-26&nbsp;·&nbsp;<span id="busuanzi_value_page_pv"></span>次阅读</p></p>
+
+            <hr>
+          </header>
+        
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="fluid"
+     data-ad-layout-key="-fj-5l+ir-3-178"
+     data-ad-client="ca-pub-9543009702827846"
+     data-ad-slot="3040430533"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+        <div class="entry-content">
+          <p>MySQL支持JSON数据类型。相比于Json格式的字符串类型，JSON数据类型的优势有：</p>
+<p>存储在JSON列中的JSON文档的会被自动验证。无效的文档会产生错误；<br>最佳存储格式。存储在JSON列中的JSON文档会被转换为允许快速读取文档元素的内部格式。<br>存储在JSON列中的任何JSON文档的大小都受系统变量max_allowed_packet的值的限制，可以使用JSON_STORAGE_SIZE()函数获得存储JSON文档所需的空间。</p>
+<p>JSON值的局部更新<br>在MySQL8.0中，优化器可以执行JSON列的局部就地更新，而不用删除旧文档再将整个新文档写入该列。局部更新的条件：</p>
+<p>正在更新的列被声明为JSON；<br>该UPDATE语句使用任一的三个函数 JSON_SET()， JSON_REPLACE()或 JSON_REMOVE()更新列；<br>输入列和目标列必须是同一列；<br>所有更改都使用新值替换现有数组或对象值，并且不向父对象或数组添加任何新元素；<br>新值不能大于旧值；<br>创建JSON值<br>JSON数组包含在 字符[和]字符中，其中为一个由逗号分隔的值列表：</p>
+<p>[“abc”, 10, null, true, false]<br>JSON对象包含在字符{和}字符中，其中为一组由逗号分隔的键值对，键必须是字符串：</p>
+<p>{“k1”: “value”, “k2”: 10}<br>在JSON数组和JSON对象的值中允许嵌套：</p>
+<p>[99, {“id”: “HK500”, “cost”: 75.99}, [“hot”, “cold”]]<br>{“k1”: “value”, “k2”: [10, 20]}<br>下例中向创建一个只有一个JSON列的表格t_json，并向其中添加JSON值：</p>
+<p>mysql&gt; CREATE TABLE t_json (jdoc JSON) ENGINE=InnoDB DEFAULT CHARSET=utf8;<br>Query OK, 0 rows affected, 1 warning (0.73 sec)</p>
+<p>mysql&gt; INSERT INTO t_json VALUES(‘[1,2]’);<br>Query OK, 1 row affected (0.17 sec</p>
+<p>mysql&gt; INSERT INTO t_json VALUES(‘{“key1”:”value1”,”key2”:”value2”}’);<br>Query OK, 1 row affected (0.27 sec)</p>
+<p>mysql&gt; INSERT INTO t_json VALUES(‘“HELLO”‘);<br>Query OK, 1 row affected (0.20 sec)<br>若添加的值为非JSON格式，则报错：</p>
+<p>mysql&gt; INSERT INTO t_json VALUES(“HELLO”);<br>ERROR 3140 (22032): Invalid JSON text: “Invalid value.” at position 0 in value for column ‘t_json.jdoc’.<br>查看t_json:</p>
+<p>mysql&gt; SELECT * FROM t_json;<br>+————————————–+<br>| jdoc                                 |<br>+————————————–+<br>| [1, 2]                               |<br>| {“key1”: “value1”, “key2”: “value2”} |<br>| “HELLO”                              |<br>+————————————–+<br>3 rows in set (0.00 sec)<br>JSON_TYPE()函数尝试将传入的值其解析为JSON值。如果值有效，则返回值的JSON类型，否则产生错误：<br>mysql&gt; SELECT JSON_TYPE(‘[“a”,”b”,true,13]’);<br>+——————————–+<br>| JSON_TYPE(‘[“a”,”b”,true,13]’) |<br>+——————————–+<br>| ARRAY                          |<br>+——————————–+<br>1 row in set (0.04 sec)</p>
+<p>mysql&gt; SELECT JSON_TYPE(‘[a,”b”,true,13]’); //注意 a<br>ERROR 3141 (22032): Invalid JSON text in argument 1 to function json_type: “Invalid value.” at position 1.<br>JSON_ARRAY()接收传入的值列表（可以为空），返回包含这些值的JSON数组：<br>mysql&gt; SELECT JSON_ARRAY(‘ab’,false,13);<br>+—————————+<br>| JSON_ARRAY(‘ab’,false,13) |<br>+—————————+<br>| [“ab”, false, 13]         |<br>+—————————+<br>1 row in set (0.00 sec)</p>
+<p>mysql&gt; SELECT JSON_ARRAY();<br>+————–+<br>| JSON_ARRAY() |<br>+————–+<br>| []           |<br>+————–+<br>1 row in set (0.00 sec)<br>JSON_OBJECT() 接收传入的键值对列表（可以为空），并返回包含这些键值对的JSON对象：<br>mysql&gt; SELECT JSON_OBJECT(‘key1’,’a’,’key2’,’b’);<br>+————————————+<br>| JSON_OBJECT(‘key1’,’a’,’key2’,’b’) |<br>+————————————+<br>| {“key1”: “a”, “key2”: “b”}         |<br>+————————————+<br>1 row in set (0.03 sec)<br>如果传入的参数不能组成键值对，则报错：</p>
+<p>mysql&gt; SELECT JSON_OBJECT(‘key1’,’value1’,’key2’);<br>ERROR 1582 (42000): Incorrect parameter count in the call to native function ‘JSON_OBJECT’<br>JSON_MERGE_PRESERVE() 获取两个或多个JSON文档并返回组合结果：<br>mysql&gt; SELECT JSON_MERGE_PRESERVE(‘[“a”, 1]’, ‘{“key”: “value”}’);<br>+—————————————————–+<br>| JSON_MERGE_PRESERVE(‘[“a”, 1]’, ‘{“key”: “value”}’) |<br>+—————————————————–+<br>| [“a”, 1, {“key”: “value”}]                          |<br>+—————————————————–+<br>1 row in set (0.03 sec)<br>因此我们也可以使用以上三种方法向表中添加JSON值，可以一定程度地避免输入格式错误：</p>
+<p>mysql&gt; INSERT INTO t_json VALUES(JSON_ARRAY(‘json_array’));<br>Query OK, 1 row affected (0.19 sec)</p>
+<p>mysql&gt; INSERT INTO t_json VALUES(JSON_OBJECT(‘key’,’hello’));<br>Query OK, 1 row affected (0.09 sec)</p>
+<p>mysql&gt; INSERT INTO t_json VALUES(JSON_MERGE_PRESERVE(JSON_OBJECT(‘key’,’hello’),JSON_ARRAY(1,2)));<br>Query OK, 1 row affected (0.14 sec)</p>
+<p>mysql&gt; SELECT * FROM t_json;<br>+————————————–+<br>| jdoc                                 |<br>+————————————–+<br>| [1, 2]                               |<br>| {“key1”: “value1”, “key2”: “value2”} |<br>| “HELLO”                              |<br>| [“json_array”]                       |<br>| {“key”: “hello”}                     |<br>| [{“key”: “hello”}, 1, 2]             |<br>+————————————–+<br>6 rows in set (0.00 sec)<br>JSON值的规范化，合并和自动包装<br>解析字符串并发现字符串是有效的JSON文档时，它在被解析时也会被规范化。对于重复的键（key）,后面的值（value）会覆盖前面的值。如下：</p>
+<p>mysql&gt; SELECT JSON_OBJECT(‘x’,1,’y’,2,’x’,’a’,’x’,’b’);<br>+——————————————+<br>| JSON_OBJECT(‘x’,1,’y’,2,’x’,’a’,’x’,’b’) |<br>+——————————————+<br>| {“x”: “b”, “y”: 2}                       |<br>+——————————————+<br>1 row in set (0.07 sec)<br>这种“覆盖”在向JSON列添加值时也会发生。<br>在MySQL8.0.3之前的版本中，与此相反，对于被重复的键，它的第一个值会被保留，后添加的值则会被抛弃。</p>
+<p>合并JSON值<br>MySQL8.0.3及更高版本中，有两种合并函数：JSON_MERGE_PRESERVE()和 JSON_MERGE_PATCH()。下面具讨论它们的区别。</p>
+<p>合并数组：<br>mysql&gt; SELECT JSON_MERGE_PATCH(‘[1, 2]’, ‘[“a”, “b”, “c”]’,’[1, 2]’, ‘[true, false]’);<br>+————————————————————————-+<br>| JSON_MERGE_PATCH(‘[1, 2]’, ‘[“a”, “b”, “c”]’,’[1, 2]’, ‘[true, false]’) |<br>+————————————————————————-+<br>| [true, false]                                                           |<br>+————————————————————————-+<br>1 row in set (0.00 sec)</p>
+<p>mysql&gt; SELECT JSON_MERGE_PRESERVE(‘[1, 2]’, ‘[“a”, “b”, “c”]’,’[1, 2]’, ‘[true, false]’);<br>+—————————————————————————-+<br>| JSON_MERGE_PRESERVE(‘[1, 2]’, ‘[“a”, “b”, “c”]’,’[1, 2]’, ‘[true, false]’) |<br>+—————————————————————————-+<br>| [1, 2, “a”, “b”, “c”, 1, 2, true, false]                                   |<br>+—————————————————————————-+<br>1 row in set (0.00 sec)<br>合并数组时，JSON_MERGE_PRESERVE只保留最后传入的数组参数，而JSON_MERGE_PRESERVE则按传入顺序将数组参数连接。</p>
+<p>合并对象<br>mysql&gt; SELECT JSON_MERGE_PATCH(‘{“a”: 3, “b”: 2}’, ‘{“c”: 3, “a”: 4}’, ‘{“c”: 5, “d”: 3}’);<br>+——————————————————————————+<br>| JSON_MERGE_PATCH(‘{“a”: 3, “b”: 2}’, ‘{“c”: 3, “a”: 4}’, ‘{“c”: 5, “d”: 3}’) |<br>+——————————————————————————+<br>| {“a”: 4, “b”: 2, “c”: 5, “d”: 3}                                             |<br>+——————————————————————————+<br>1 row in set (0.00 sec)</p>
+<p>mysql&gt; SELECT JSON_MERGE_PRESERVE(‘{“a”: 3, “b”: 2}’, ‘{“c”: 3, “a”: 4}’, ‘{“c”: 5, “d”: 3}’);<br>+———————————————————————————+<br>| JSON_MERGE_PRESERVE(‘{“a”: 3, “b”: 2}’, ‘{“c”: 3, “a”: 4}’, ‘{“c”: 5, “d”: 3}’) |<br>+———————————————————————————+<br>| {“a”: [3, 4], “b”: 2, “c”: [3, 5], “d”: 3}                                      |<br>+———————————————————————————+<br>1 row in set (0.00 sec)<br>合并对象时，对于重复键，JSON_MERGE_PRESERVE只保留最后传入的键值，而JSON_MERGE_PRESERVE重复键的所有值保留为数组。</p>
+<p>搜索和修改JSON值<br>在了解搜索和修改JSON值之前，先来看看JSON的路径语法。</p>
+<p>路径语法<br>.keyName：JSON对象中键名为keyName的值；<br>对于不合法的键名（如有空格），在路径引用中必须用双引号”将键名括起来，例，.”key name”；<br>[index]：JSON数组中索引为index的值，JSON数组的索引同样从0开始；<br>[index1 to index2]：JSON数组中从index1到index2的值的集合；<br>.<em>: JSON对象中的所有value；<br>[</em>]: JSON数组中的所有值；<br>prefix<strong>suffix: 以prefix开头并以suffix结尾的路径；<br>**.keyName为多个路径，如对于JSON对象’{“a”: {“b”: 1}, “c”: {“b”: 2}}’,’$</strong>.b’指路径$.a.b和$.c.b；<br>不存在的路径返回结果为NULL；<br>前导$字符表示当前正在使用的JSON文档<br>例子：对于数组[3, {“a”: [5, 6], “b”: 10}, [99, 100]]<br>$[1]为{“a”: [5, 6], “b”: 10}。<br>[1].a为[5, 6]。<br>$[1].a[1]为 6。<br>$[1].b为 10。<br>$[2][0]为 99。<br>搜索<br>JSON_EXTRACT提取JSON值，直接看例子：</p>
+<p>JSON对象<br>mysql&gt; SELECT JSON_EXTRACT(‘{“id”: 29, “name”: “Taylor”}’, ‘$.name’);<br>+——————————————————–+<br>| JSON_EXTRACT(‘{“id”: 29, “name”: “Taylor”}’, ‘$.name’) |<br>+——————————————————–+<br>| “Taylor”                                               |<br>+——————————————————–+<br>1 row in set (0.00 sec)</p>
+<p>mysql&gt; SELECT JSON_EXTRACT(‘{“id”: 29, “name”: “Taylor”}’, ‘$.<em>‘);<br>+—————————————————–+<br>| JSON_EXTRACT(‘{“id”: 29, “name”: “Taylor”}’, ‘$.</em>‘) |<br>+—————————————————–+<br>| [29, “Taylor”]                                      |<br>+—————————————————–+<br>1 row in set (0.00 sec)<br>JSON数组<br>mysql&gt; SELECT JSON_EXTRACT(‘[“a”, “b”, “c”]’, ‘$[1]’);<br>+—————————————–+<br>| JSON_EXTRACT(‘[“a”, “b”, “c”]’, ‘$[1]’) |<br>+—————————————–+<br>| “b”                                     |<br>+—————————————–+<br>1 row in set (0.00 sec)</p>
+<p>mysql&gt; SELECT JSON_EXTRACT(‘[“a”, “b”, “c”]’, ‘$[1 to 2]’);<br>+———————————————-+<br>| JSON_EXTRACT(‘[“a”, “b”, “c”]’, ‘$[1 to 2]’) |<br>+———————————————-+<br>| [“b”, “c”]                                   |<br>+———————————————-+<br>1 row in set (0.00 sec)</p>
+<p>mysql&gt; SELECT JSON_EXTRACT(‘[“a”, “b”, “c”]’, ‘$[<em>]’);<br>+—————————————–+<br>| JSON_EXTRACT(‘[“a”, “b”, “c”]’, ‘$[</em>]’) |<br>+—————————————–+<br>| [“a”, “b”, “c”]                         |<br>+—————————————–+<br>1 row in set (0.00 sec)<br>修改<br>JSON_REPLACE 替换值（只替换已经存在的旧值）<br>JSON_SET 设置值（替换旧值，并插入不存在的新值）<br>JSON_INSERT 插入值（插入新值，但不替换已经存在的旧值）<br>JSON_REMOVE 删除JSON数据，删除指定值后的JSON文档<br>JSON_REPLACE与JSON_SET的区别：</p>
+<p>// 旧值存在<br>mysql&gt; SELECT JSON_REPLACE(‘{“id”: 29, “name”: “Taylor”}’, ‘$.name’, ‘Mere’);<br>+—————————————————————-+<br>| JSON_REPLACE(‘{“id”: 29, “name”: “Taylor”}’, ‘$.name’, ‘Mere’) |<br>+—————————————————————-+<br>| {“id”: 29, “name”: “Mere”}                                     |<br>+—————————————————————-+<br>1 row in set (0.00 sec)</p>
+<p>mysql&gt; SELECT JSON_SET(‘{“id”: 29, “name”: “Taylor”}’, ‘$.name’, “Mere”);<br>+————————————————————+<br>| JSON_SET(‘{“id”: 29, “name”: “Taylor”}’, ‘$.name’, ‘Mere’) |<br>+————————————————————+<br>| {“id”: 29, “name”: “Mere”}                                 |<br>+————————————————————+<br>1 row in set (0.00 sec)</p>
+<p>// 旧值不存在<br>mysql&gt; SELECT JSON_REPLACE(‘{“id”: 29, “name”: “Taylor”}’, ‘$.cat’, ‘Mere’);<br>+—————————————————————+<br>| JSON_REPLACE(‘{“id”: 29, “name”: “Taylor”}’, ‘$.cat’, ‘Mere’) |<br>+—————————————————————+<br>| {“id”: 29, “name”: “Taylor”}                                  |<br>+—————————————————————+<br>1 row in set (0.00 sec)</p>
+<p>mysql&gt; SELECT JSON_SET(‘{“id”: 29, “name”: “Taylor”}’, ‘$.cat’, ‘Mere’);<br>+———————————————————–+<br>| JSON_SET(‘{“id”: 29, “name”: “Taylor”}’, ‘$.cat’, ‘Mere’) |<br>+———————————————————–+<br>| {“id”: 29, “cat”: “Mere”, “name”: “Taylor”}               |<br>+———————————————————–+<br>1 row in set (0.00 sec)<br>JSON_INSERT和JSON_SET:</p>
+<p>// 旧值存在<br>mysql&gt; SELECT JSON_INSERT(‘[1, 2, 3]’, ‘$[1]’, 4);<br>+————————————-+<br>| JSON_INSERT(‘[1, 2, 3]’, ‘$[1]’, 4) |<br>+————————————-+<br>| [1, 2, 3]                           |<br>+————————————-+<br>1 row in set (0.00 sec)</p>
+<p>mysql&gt; SELECT JSON_SET(‘[1, 2, 3]’, ‘$[1]’, 4);<br>+———————————-+<br>| JSON_SET(‘[1, 2, 3]’, ‘$[1]’, 4) |<br>+———————————-+<br>| [1, 4, 3]                        |<br>+———————————-+<br>1 row in set (0.00 sec)</p>
+<p>//旧值不存在<br>mysql&gt; SELECT JSON_INSERT(‘[1, 2, 3]’, ‘$[4]’, 4);<br>+————————————-+<br>| JSON_INSERT(‘[1, 2, 3]’, ‘$[4]’, 4) |<br>+————————————-+<br>| [1, 2, 3, 4]                        |<br>+————————————-+<br>1 row in set (0.00 sec)</p>
+<p>mysql&gt; SELECT JSON_SET(‘[1, 2, 3]’, ‘$[4]’, 4);<br>+———————————-+<br>| JSON_SET(‘[1, 2, 3]’, ‘$[4]’, 4) |<br>+———————————-+<br>| [1, 2, 3, 4]                     |<br>+———————————-+<br>1 row in set (0.00 sec)<br>JSON_REMOVE:</p>
+<p>mysql&gt; SELECT JSON_REMOVE(‘[1, 2, 3]’, ‘$[1]’);<br>+———————————-+<br>| JSON_REMOVE(‘[1, 2, 3]’, ‘$[1]’) |<br>+———————————-+<br>| [1, 3]                           |<br>+———————————-+<br>1 row in set (0.00 sec)</p>
+<p>mysql&gt; SELECT JSON_REMOVE(‘[1, 2, 3]’, ‘$[4]’);<br>+———————————-+<br>| JSON_REMOVE(‘[1, 2, 3]’, ‘$[4]’) |<br>+———————————-+<br>| [1, 2, 3]                        |<br>+———————————-+<br>1 row in set (0.00 sec)</p>
+<p>mysql&gt; SELECT JSON_REMOVE(‘{“id”: 29, “name”: “Taylor”}’, ‘$.name’);<br>+——————————————————-+<br>| JSON_REMOVE(‘{“id”: 29, “name”: “Taylor”}’, ‘$.name’) |<br>+——————————————————-+<br>| {“id”: 29}                                            |<br>+——————————————————-+<br>1 row in set (0.00 sec)<br>JSON值的比较和排序<br>可以使用=，&lt;，&lt;=，&gt;，&gt;=，&lt;&gt;，!=，和 &lt;=&gt;对JSON值进行比较。<br>JSON值的比较先比较值的类型。如果类型不同，则直接 返回类型的优先级的比较结果；如果类型相同，再进行值的内容的比较。</p>
+<p>JSON中值的类型的优先级从高到低为：<br>BLOB<br>BIT<br>OPAQUE<br>DATETIME<br>TIME<br>DATE<br>BOOLEAN<br>ARRAY<br>OBJECT<br>STRING<br>INTEGER, DOUBLE<br>NULL<br>OPAQUE值是不属于其他类型的值。</p>
+<p>JSON值的内容的比较规则（因类型不同而有差别）：<br>BLOB<br>比较两个值的前N个字节，其中N为较短的值的字节数。如果前N个字节相同，则较短的值较小。BIT和OPAQUE与BLOB的规则相同。<br>DATETIME<br>较早时间点的值较小。如果两个值分别为 MySQL DATETIME and TIMESTAMP类型且表示的是相同的时间点，则这两个值相等。<br>TIME<br>较少的是时间值较小。<br>DATE<br>较早的日期值较小。<br>ARRAY<br>较短的数组较小。<br>如果两个数组长度相同，且相同索引处的值相同，则两个数组相等。<br>对于不行等的数组，它们的大小顺序由两数组中第一个不同的元素决定。<br>例子：<br>[] &lt; [“a”] &lt; [“ab”] &lt; [“ab”, “cd”, “ef”] &lt; [“ab”, “ef”]<br>BOOLEAN<br>false &lt; true<br>OBJECT<br>具有完全相同的键值对的两对象相等。如<br>{“a”: 1, “b”: 2} = {“b”: 2, “a”: 1}<br>STRING<br>与BLOB比较规则相似。区分大小写。<br>如：<br>“A”&lt;”a” &lt; “ab” &lt; “b” &lt; “bc”<br>INTEGER， DOUBLE<br>如果进行INTEGER列和DOUBLE列的比较，则integer数会被转为double数，即精确值转为近似值，再进行比较；<br>如果查询比较包含数字的两个JSON列，则无法预先知道数字是INTEGER还是DOUBLE，比较时会将近似值转为精确值，在进行比较。<br>INTEGER比较<br>9223372036854775805 &lt; 9223372036854775806 &lt; 9223372036854775807<br>DOUBLE比较<br>9223372036854775805 = 9223372036854775806 = 9223372036854775807 = 9.223372036854776e18<br>任何JSON值与NULL比较的结果为UNKOWN<br>JSON值与非JSON值比较时，非JSON值会被转为JSON值<br>JSON值和非JSON值转换<br>转换规则为：</p>
+<p>other type    CAST(other type AS JSON)    CAST(JSON AS other type)<br>JSON    没变化    没变化<br>utf8字符类型(utf8mb4,utf8,ascii)    字符串被解析为JSON值    JSON值被序列化为utf8mb4字符串<br>其他字符类型    其他字符编码被隐式转换为utf8mb4，并按utf8字符类型进行处理    JSON值被序列化为utf8mb4字符串，然后再被转换为其他字符编码。结果可能没有意义。<br>NULL    结果为JSON类型的NULL值    不适用<br>Geometry类型    ST_AsGeoJSON()将Geometry值转换为JSON文档    非法操作。解决办法: 将CAST(JSON AS other type)的结果传递给CHAR)ST_GeomFromGeoJSON()<br>所有其他类型    转换结果是由单个标量值组成的JSON文档    如果JSON文档由目标类型的单个标量值组成，并且标量值可以强制转换为目标类型，则成功转换。否则，返回NULL 并发出警告。</p>
+
+        </div>
+        <!-- .entry-content -->
+        <div class="single-reward">
+          <div class="reward-open">赏<div class="reward-main">
+              <ul class="reward-row">
+                <li class="alipay-code"><img src="undefined"></li>
+                <li class="wechat-code"><img src="undefined"></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
+        <footer class="post-footer">
+          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
+          <div class="post-tags">
+          </div>
+          <div class="post-share">
+            <div class="social-share sharehidden share-component"></div>
+            <i class="iconfont show-share icon-forward"></i>
+          </div>
+        </footer><!-- .entry-footer -->
+      </article>
+      <!-- #post-## -->
+      <div class="toc" style="background: none;"></div>
+      <section class="post-squares nextprev">
+        
+          
+            <div class="post-nepre half previous">
+          
+            <a href="/2019/11/26/部署-Office-Online-Server/" rel="prev">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/loader/orange.progress-bar-stripe-loader.svg" data-src="" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="">
+              </div>
+              <span class="label">
+              Previous Post</span>
+              <div class="info">
+                <h3>
+                部署 Office Online Server</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+        
+          
+            <div class="post-nepre half next">
+          
+            <a href="/2019/09/27/失落之境-安装方法/" rel="next">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/loader/orange.progress-bar-stripe-loader.svg" data-src="" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="">
+              </div>
+              <span class="label">
+              Next Post</span>
+              <div class="info">
+                <h3>
+                失落之境MC-安装方法</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+      </section>
+      
+<div id="vcomments"></div>
+<script>
+  window.onload = function(){
+      var valine = new Valine();
+      valine.init({
+        el: '#vcomments',
+        appId: "4cWxpNhgVTm5dJrnWGU1zpUS-MdYXbMMI",
+        appKey: "9ukWp1RJdcqihwVgnvWTKt5N",
+        path: window.location.pathname,
+        placeholder: "你是我一生只会遇见一次的惊喜 ..."
+      })
+  }
+</script>
+
+      <section class="author-profile">
+        <div class="info" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <a href="mwx-lh.com" class="profile gravatar"><img src="https://wx1.sinaimg.cn/large/006bYVyvgy1ftand2qurdj303c03cdfv.jpg" itemprop="image" alt="MWX" height="70" width="70"></a>
+          <div class="meta">
+            <span class="title">Author</span>
+            <h3 itemprop="name">
+            <a href="mwx-lh.com" itemprop="url" rel="author">MWX</a>
+            </h3>
+          </div>
+        </div>
+        <hr>
+        <p><i class="iconfont icon-write"></i>MWX</p>
+      </section>
+    </main><!-- #main -->
+  </div><!-- #primary -->
+</div>
+
+
+
+    </div>    
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="请输入关键词..."/>
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            // PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+    <!-- <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 MWX<br>
+      powered_by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer> -->
+<footer id="colophon" class="site-footer" role="contentinfo">
+  <div class="site-info">
+    <div class="footertext">
+      <div class="img-preload">
+        <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/wordpress-rotating-ball-o.svg">
+        <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/disqus-preloader.svg">
+      </div>
+      <p style="color: #666666;">&copy MWX 2018-2020</p>
+    </div>
+    <div class="footer-device">
+    <p style="font-family: 'Ubuntu', sans-serif;">
+        <span style="color: #b9b9b9;"> <i class="iconfont icon-sakura rotating" style="color: #ffc0cb;display:inline-block"></i>Powered by Hexo
+        </span>
+      </p>
+    </div>
+  </div><!-- .site-info -->
+</footer>
+
+
+
+<!-- <script src="/js/tocbot.js"></script> -->
+<script type="text/javascript" src="/js/lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script type="text/javascript" src="/js/InsightSearch.js"></script>
+<script type="text/javascript" src="/js/jquery.fancybox.min.js"></script>
+<script type="text/javascript" src="/js/zoom.min.js"></script>
+<script type="text/javascript" src="/js/sakura-app.js"></script>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine@1.3.4/dist/Valine.min.js'></script>
+<!-- 不蒜子 网页计数器 -->
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script> -->
+<script type="text/javascript">
+/* <![CDATA[ */
+if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  var Poi = {"pjax":"1","movies":{"url": "https://cdn.jsdelivr.net/gh/honjun/hojun@1.2","name":"Unbroken.mp4","live":"close"},"windowheight":"fixed","codelamp":"close","ajaxurl":"","order":"asc","formpostion":"bottom"};
+} else {
+  var Poi = {"pjax":"1","movies":{"url": "https://cdn.jsdelivr.net/gh/honjun/hojun@1.2","name":"Unbroken.mp4","live":"open"},"windowheight":"auto","codelamp":"close","ajaxurl":"","order":"asc","formpostion":"bottom"};
+}
+/* ]]> */
+
+</script>
+<script>
+$(document).ready(function() {
+  if ($(".toc").length > 0 && document.body.clientWidth > 1200) {
+    if ($(".pattern-center").length > 0) { //有图的情况
+      tocbot.init({
+          // Where to render the table of contents.
+          tocSelector: '.toc', // 放置目录的容器
+          // Where to grab the headings to build the table of contents.
+          contentSelector: '.entry-content', // 正文内容所在
+          // Which headings to grab inside of the contentSelector element.
+          scrollSmooth: true,
+          headingSelector: 'h1, h2, h3, h4, h5', // 需要索引的标题级别
+          headingsOffset: -400,
+          scrollSmoothOffset: -85
+      });
+    } else {
+      tocbot.init({
+          // Where to render the table of contents.
+          tocSelector: '.toc', // 放置目录的容器
+          // Where to grab the headings to build the table of contents.
+          contentSelector: '.entry-content', // 正文内容所在
+          // Which headings to grab inside of the contentSelector element.
+          scrollSmooth: true,
+          headingSelector: 'h1, h2, h3, h4, h5', // 需要索引的标题级别
+          headingsOffset: -85,
+          scrollSmoothOffset: -85
+      });
+    }
+    var offsetTop = $('.toc').offset().top - 95;
+    window.onscroll = function() {
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+      if (scrollTop >= offsetTop) {
+        $('.toc').addClass('toc-fixed');
+      } else {
+        $('.toc').removeClass('toc-fixed');
+      }
+    }
+  }
+});
+</script>
+<script>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+  <div id="landlord">
+      <div class="message" style="opacity:0"></div>
+      <canvas id="live2d" width="280" height="250" class="live2d"></canvas>
+      <div class="hide-button">隐藏</div>
+  </div>
+  <script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+  <script type="text/javascript">
+      var message_Path = '/live2d/'
+      var home_Path = 'https://mwx-lh.com/'
+  </script>
+  <script type="text/javascript" src="/live2d/js/live2d.js"></script>
+  <script type="text/javascript" src="/live2d/js/message.js"></script>
+  <script type="text/javascript">
+      loadlive2d("live2d", "/live2d/model/tianyi/model.json");
+  </script>
+    <div class="openNav no-select" style="height: 50px;">
+      <div class="iconflat no-select" style="width: 50px; height: 50px;">
+        <div class="icon"></div>
+      </div>
+      <div class="site-branding search-form-submit">
+        <i class="iconfont js-toggle-search iconsearch icon-search"></i>
+      </div>
+    </div>
+  </section>
+  <div id="mo-nav" class="">
+  <div class="m-avatar">
+    <img src="https://cdn.jsdelivr.net/gh/mwx2006/Img/avatar.jpg">
+  </div>
+  <p style="text-align: center; color: #333; font-weight: 900; font-family: 'Ubuntu', sans-serif; letter-spacing: 1.5px">暗雨-MWX</p>
+  <p style="text-align: center; word-spacing: 20px;">
+    
+      
+        <a href="http://github.com/mwx2006" class="fa fa-github" target="_blank" style="color: #333; margin-left:20px"></a>
+      
+        <a href="https://t.me/joinchat/Obf09BP1q8SnCix5qkar9A" class="fa fa-telegram" target="_blank" style="color: #dd4b39; margin-left:20px"></a>
+      
+        <a href="http://qm.qq.com/cgi-bin/qm/qr?k=Tj5T5LysTQroRCqThEKXCEPmLmsGXYo2&authKey=muD25VZa16FTcJFFtx4xMnu7JKR1BioQJ4SGrid%2FHvIrCTWZKZFFuLF%2F0fhgG5LQ&group_code=930178809" class="fa fa-qq" target="_blank" style="color: #25c6fe; margin-left:20px"></a>
+      
+    
+  </p>
+  <ul id="menu-new-1" class="menu">
+    
+      <li>
+        <a href="/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-fort-awesome faa-shake" aria-hidden="true"></i>
+            首页
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/archives">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-archive faa-shake" aria-hidden="true"></i>
+            归档
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/links/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-link faa-shake" aria-hidden="true"></i>
+            友人帐
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/donate/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-heart faa-pulse" aria-hidden="true"></i>
+            赞赏
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-leaf faa-wrench" aria-hidden="true"></i>
+            关于
+          </span>
+        </a>
+        
+          <ul class="sub-menu">
+            
+              <li>
+                <a href="/about/">
+                  <i class="fa fa-meetup" aria-hidden="true"></i>
+                  我？
+                </a>
+              </li>
+            
+              <li>
+                <a href="/theme-sakura/">
+                  <i class="fa iconfont icon-sakura" aria-hidden="true"></i>
+                  主题
+                </a>
+              </li>
+            
+              <li>
+                <a href="/lab/">
+                  <i class="fa fa-cogs" aria-hidden="true"></i>
+                  Lab
+                </a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+      <li>
+        <a href="/atom.xml">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-rss faa-pulse" aria-hidden="true"></i>
+            RSS
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/mc/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
+            我的世界
+          </span>
+        </a>
+        
+      </li>
+    
+  </ul>
+  <p style="text-align: center; font-size: 13px; color: #b9b9b9;">&copy 2019 MWX</p>
+</div>
+<button onclick="topFunction()" class="mobile-cd-top" id="moblieGoTop" title="Go to top" style="display: none;"><i class="fa fa-chevron-up" aria-hidden="true"></i></button>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+<style>
+  .aplayer .aplayer-lrc {
+    height: 35px;
+  }
+  .aplayer .aplayer-lrc p{
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 18px !important;
+  }
+  .aplayer .aplayer-lrc p.aplayer-lrc-current{
+    color: #FF1493;
+  }
+  .aplayer.aplayer-narrow .aplayer-body{
+    left: -66px !important;
+  }
+  .aplayer.aplayer-fixed .aplayer-lrc {
+    display: none;
+  }
+  .aplayer .aplayer-lrc.aplayer-lrc-hide {
+      display:none !important;
+  }
+  .aplayer.aplayer-fixed .lrc-show {
+    display: block;
+    background: rgba(255, 255, 255, 0.8);
+  }
+</style>
+<div class="aplayer"
+
+    data-id="885893447"
+
+    data-server="netease"
+
+    data-type="playlist"
+
+    data-fixed="true"
+
+    data-autoplay="false"
+
+    data-loop="all"
+
+    data-order="random"
+
+    data-preload="auto"
+
+    data-volume="0.7"
+
+    data-mutex="true"
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
+<script>
+  $(function(){
+    $('body').on('click', '.aplayer', function(){
+      if($('.aplayer-button').hasClass('aplayer-play')) {
+        $('.aplayer-lrc').removeClass('lrc-show');
+      } else {
+        $('.aplayer-lrc').addClass('lrc-show');
+      }
+    })
+  });
+</script>
+</body>
+</html>

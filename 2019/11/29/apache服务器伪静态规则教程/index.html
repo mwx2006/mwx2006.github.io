@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  
+  <title itemprop="name">apache服务器伪静态规则教程 | MWX</title>
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+SerifMerriweather|Merriweather+Sans|Source+Code+Pro|Ubuntu:400,700|Noto+Serif+SC" media="all">
+  <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+  <link rel="stylesheet" id="saukra_css-css" href="/css/style.css" type="text/css" media="all">
+  <link rel="stylesheet" href="/css/lib.min.css" media="all">
+  <link rel="stylesheet" href="/css/font.css" media="all">
+  <link rel="stylesheet" href="/css/insight.css" media="all">
+  <link rel="stylesheet" href="/css/jquery.fancybox.min.css" media="all">
+  <link rel="stylesheet" href="/css/zoom.css" media="all">
+  <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+  <link rel="stylesheet" href="/live2d/css/live2d.css">
+
+<!--   <link rel="stylesheet" id="saukra_css-css" href="https://2heng.xin/wp-content/cache/autoptimize/css/autoptimize_ad42a61f4c7d4bdd9f91afcff6b5dda5.css
+" type="text/css" media="all"> -->
+  <script>
+  /*Initial Variables*/
+  var mashiro_option = new Object();
+  var mashiro_global = new Object();
+  mashiro_option.NProgressON = true;
+  /* 
+   * 邮箱信息之类的东西可以填在这里，这些js变量基本都作用于sakura-app.js
+   * 这样的设置仅是为了方便在基于PHP开发的主题中设置js变量，既然移植到了Node上，我想或许可以精简这一逻辑吧
+   */
+  mashiro_option.email_domain = "";
+  mashiro_option.email_name = "";
+  mashiro_option.cookie_version_control = "";
+  mashiro_option.qzone_autocomplete = false;
+  mashiro_option.site_name = "暗雨-MWX";
+  mashiro_option.author_name = "MWX";
+  mashiro_option.site_url = "https://mwx-lh.com";
+  mashiro_option.v_appId = "4cWxpNhgVTm5dJrnWGU1zpUS-MdYXbMMI";
+  mashiro_option.v_appKey = "9ukWp1RJdcqihwVgnvWTKt5N";
+  mashiro_option.mathjax = "0";
+  mashiro_option.qq_api_url = "https://api.mashiro.top/qqinfo/"; 
+  mashiro_option.qq_avatar_api_url = "https://api.mashiro.top/qqinfo/";
+
+  // mashiro_option.jsdelivr_css_src = "https://cdn.jsdelivr.net/gh/moezx/cdn@3.4.5/css/lib.min.css";
+  // mashiro_option.float_player_on = true;
+
+  /*End of Initial Variables*/
+  </script>
+  <script type="text/javascript">
+  var bg = "https://cdn.jsdelivr.net/gh/mwx2006/Img@master/cover/(1).jpg.webp,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/cover/(2).jpg.webp,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/cover/(3).jpg.webp,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/cover/(4).jpg.webp,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/cover/(5).jpg.webp,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/cover/(6).jpg.webp,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/cover/(7).jpg.webp,https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/cover/(8).jpg.webp,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_01.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_02.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_03.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_04.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_05.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_06.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_07.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_08.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_09.png,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_10.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_11.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_12.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_13.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_14.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_15.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_16.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_17.jpg,https://cdn.jsdelivr.net/gh/mwx2006/Img@master/custom/default/pic_18.jpg".split(",");
+  var bgindex = Math.floor(Math.random()*bg.length);
+  if (!!window.ActiveXObject || "ActiveXObject" in window) { //is IE?
+    alert('朋友，IE浏览器未适配哦~');
+  }
+  </script>
+  <style type="text/css">
+  .hljs-ln{border-collapse:collapse}.hljs-ln td{padding:0}.hljs-ln-n:before{content:attr(data-line-number)}
+  </style>
+  <style type="text/css">.site-top .lower nav{display:block !important;}.author-profile i,.post-like a,.post-share .show-share,.sub-text,.we-info a,span.sitename,.post-more i:hover,#pagination a:hover,.post-content a:hover,.float-content i:hover{color:#FE9600}.feature i,.download,.navigator i:hover,.links ul li:before,.ar-time i,span.ar-circle,.object,.comment .comment-reply-link,.siren-checkbox-radio:checked + .siren-checkbox-radioInput:after{background:#FE9600}::-webkit-scrollbar-thumb{background:#FE9600}.download,.navigator i:hover,.link-title,.links ul li:hover,#pagination a:hover,.comment-respond input[type='submit']:hover{border-color:#FE9600}.entry-content a:hover,.site-info a:hover,.comment h4 a,#comments-navi a.prev,#comments-navi a.next,.comment h4 a:hover,.site-top ul li a:hover,.entry-title a:hover,#archives-temp h3,span.page-numbers.current,.sorry li a:hover,.site-title a:hover,i.iconfont.js-toggle-search.iconsearch:hover,.comment-respond input[type='submit']:hover{color:#FE9600}.comments .comments-main{display:block !important;}.comments .comments-hidden{display:none !important;}background-position:center center;background-attachment:inherit;}
+  </style>
+  <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?fdc45c4ded64e67bae4dac25882e0364";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<!--哀悼模式
+<style type="text/css">
+    html {
+    FILTER: gray;
+    -webkit-filter: grayscale(100%);
+    }
+</style>-->
+</head></html>
+<body class="page-template page-template-user page-template-page-analytics page-template-userpage-analytics-php page page-id-1297 chinese-font serif isWebKit">
+  <div class="scrollbar" id="bar">
+  </div>
+  <a href="#" class="cd-top faa-float animated"></a>
+  <section id="main-container">
+    <div class="headertop filter-grid">
+  <div id="banner_wave_1"></div>
+  <div id="banner_wave_2"></div>
+  <figure id="centerbg" class="centerbg">
+    <div class="focusinfo no-select">
+      <div class="header-tou">
+        <a href="https://mwx-lh.com">
+          <img src="https://cdn.jsdelivr.net/gh/mwx2006/Img/avatar.jpg">
+        </a>
+      </div>
+      <div class="header-info">
+        <p>帷幕落下,喝彩响起,片刻后都沉寂.</p>
+        <div class="top-social_v2">
+          <li id="bg-pre">
+            <img class="flipx" src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/next-b.svg">
+          </li>
+          
+            
+              
+                <li>
+                  <a href="http://github.com/mwx2006" target="_blank" class="social-github" title="github">
+                    <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/social/github.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="https://weibo.com/mwx2006" target="_blank" class="social-github" title="sina">
+                    <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/social/sina.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="https://music.163.com/#/user/home?id=570158205" target="_blank" class="social-github" title="wangyiyun">
+                    <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/social/wangyiyun.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="https://t.me/joinchat/Obf09BP1q8SnCix5qkar9A" target="_blank" class="social-github" title="telegram">
+                    <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/social/telegram.svg">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="https://user.qzone.qq.com/2942799863" target="_blank" class="social-github" title="qzone">
+                    <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/social/qzone.png">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="mailto:2942799863@qq.com" target="_blank" class="social-github" title="email">
+                    <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/social/email.svg">
+                  </a>
+                </li>
+              
+            
+              
+                <li>
+                  <a href="//qm.qq.com/cgi-bin/qm/qr?k=m6GEN2Nsacav0YZL0tNH_fJIjhobCCu0&amp;authKey=U4jHIGQX1GgbMz5fjDiDhqfhuFOwDeK%2BH9%2BpEx8Y770t1BSnh0zO0uKljL1DAQIc&amp;group_code=827275454" target="_blank" class="social-github" title="qq">
+                    <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/social/qq.png">
+                  </a>
+                </li>
+              
+            
+          
+          <li id="bg-next">
+            <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/next-b.svg">
+          </li>
+        </div>
+      </div>
+    </div>
+  </figure>
+  <div id="video-container" style="">
+    <video style="object-fit: fill" id="bgvideo" class="video" video-name="" src="" width="auto" preload="auto">
+    </video>
+    <div id="video-btn" class="loadvideo videolive">
+    </div>
+    <div id="video-add">
+    </div>
+    <div class="video-stu">
+    </div>
+  </div>
+  <div class="headertop-down faa-float animated" onclick="headertop_down()">
+    <span>
+      <i class="fa fa-chevron-down" aria-hidden="true">
+      </i>
+    </span>
+  </div>
+</div>
+    <div id="page" class="site wrapper">
+      <header class="site-header no-select gizle sabit" role="banner">
+  <div class="site-top">
+    <div class="site-branding">
+      <span class="site-title">
+        <span class="logolink moe-mashiro">
+          <a href="/">
+            <span class="sakurasono">暗雨-</span>
+            <span class="shironeko">MWX</span>
+          </a>
+        </span>
+      </span>
+    </div>
+    <div class="searchbox search-form-submit">
+      <i class="iconfont js-toggle-search iconsearch icon-search">
+      </i>
+    </div>
+    <div id="show-nav" class="showNav mobile-fit">
+      <div class="line line1">
+      </div>
+      <div class="line line2">
+      </div>
+      <div class="line line3">
+      </div>
+    </div>
+    <div class="lower-cantiner">
+      <div class="lower">
+        <nav class="mobile-fit-control hide">
+          <ul id="menu-new" class="menu">
+            
+              <li>
+                <a href="/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-fort-awesome faa-shake" aria-hidden="true"></i>
+                    首页
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-archive faa-shake" aria-hidden="true"></i>
+                    归档
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/links/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-link faa-shake" aria-hidden="true"></i>
+                    友人帐
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/donate/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-heart faa-pulse" aria-hidden="true"></i>
+                    赞赏
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-leaf faa-wrench" aria-hidden="true"></i>
+                    关于
+                  </span>
+                </a>
+                
+                  <ul class="sub-menu">
+                    
+                      <li>
+                        <a href="/about/">
+                          <i class="fa fa-meetup" aria-hidden="true"></i>
+                          我？
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/theme-sakura/">
+                          <i class="fa iconfont icon-sakura" aria-hidden="true"></i>
+                          主题
+                        </a>
+                      </li>
+                    
+                      <li>
+                        <a href="/lab/">
+                          <i class="fa fa-cogs" aria-hidden="true"></i>
+                          Lab
+                        </a>
+                      </li>
+                    
+                  </ul>
+                
+              </li>
+            
+              <li>
+                <a href="/atom.xml">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-rss faa-pulse" aria-hidden="true"></i>
+                    RSS
+                  </span>
+                </a>
+                
+              </li>
+            
+              <li>
+                <a href="/mc/">
+                  <span class="faa-parent animated-hover">
+                    <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
+                    我的世界
+                  </span>
+                </a>
+                
+              </li>
+            
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script src="/js/adview_pic_cpc_cpm_cpa_guanggao_gg_ads_300x250_adsbygoogle.js" type="text/javascript"></script> 
+    <script type="text/javascript">
+    if (typeof(killads)=='undefined'){alert('广告被过滤');alert('请把本站加入广告过滤白名单');alert('谢谢');}
+    </script>
+
+</header>
+
+      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
+<div class="pattern-center-blank"></div>
+
+<div id="content" class="site-content">
+  <div id="primary" class="content-area">
+    <main id="main" class="site-main" role="main">
+      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+        <div class="toc"></div>
+        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
+        
+          <header class="entry-header">
+            <h1 class="entry-title">apache服务器伪静态规则教程</h1>
+            <p class="entry-census">MWX&nbsp;·&nbsp;2019-11-29&nbsp;·&nbsp;<span id="busuanzi_value_page_pv"></span>次阅读</p></p>
+
+            <hr>
+          </header>
+        
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="fluid"
+     data-ad-layout-key="-fj-5l+ir-3-178"
+     data-ad-client="ca-pub-9543009702827846"
+     data-ad-slot="3040430533"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+        <div class="entry-content">
+          <pre><code>虽然网上有很多教程，不过发现大部分都是抄袭一个人的，一点都不全，所以我想写一个简单的易于理解的教程，我学习.htaccess是从目录保护开始的，这个也比较简单，网上也有一些编辑器可以选择，这儿就不说了，教程从绑定域名到子目录开始，网上也有教程，大部分都是抄袭一个人的，我在这儿解说一下，教程写法是这样的：</code></pre><p>RewriteEngineOn</p>
+<p>RewriteCond%{HTTP_HOST}^(www.)?xxx.com$</p>
+<p>RewriteCond%{REQUEST_URI}!^/blog/</p>
+<p>RewriteCond%{REQUEST_FILENAME}!-f</p>
+<p>RewriteCond%{REQUEST_FILENAME}!-d</p>
+<p>RewriteRule^(.*)$/blog/$1</p>
+<p>#没有输入文件名的默认到到首页</p>
+<p>RewriteCond%{HTTP_HOST}^(www.)?xxx.com$</p>
+<p>RewriteRule^(/)?$blog/index.php[L]</p>
+<p>下面我开始解说一下上面的意思：</p>
+<p>【RewriteEngineOn】表示重写引擎开，关闭off，作用就是方便的开启或关闭以下的语句，这样就不需要一条一条的注释语句了。</p>
+<p>【RewriteCond%{HTTP_HOST}^(www.)?xxx.com$】</p>
+<p>这是重写条件，前面%{HTTP_HOST}表示当前访问的网址，只是指前缀部分，格式是<a href="http://www.xxx.com不包括“http://”和“/”，^表示字符串开始，$表示字符串结尾，\.表示转义的.，如果不转义也行，推荐转义，防止有些服务器不支持，?表示前面括号www\.出现0次或1次，这句规则的意思就是如果访问的网址是xxx.com或者www.xxx.com就执行以下的语句，不符合就跳过。" target="_blank" rel="noopener">www.xxx.com不包括“http://”和“/”，^表示字符串开始，$表示字符串结尾，\.表示转义的.，如果不转义也行，推荐转义，防止有些服务器不支持，?表示前面括号www\.出现0次或1次，这句规则的意思就是如果访问的网址是xxx.com或者www.xxx.com就执行以下的语句，不符合就跳过。</a></p>
+<p>【RewriteCond%{REQUEST_URI}!^/blog/】</p>
+<p>也是重写条件，%{REQUEST_URI}表示访问的相对地址，就是相对根目录的地址，就是域名/后面的成分，格式上包括最前面的“/”，!表示非，这句语句表示访问的地址不以/blog/开头，只是开头^，没有结尾$</p>
+<p>【RewriteCond%{REQUEST_FILENAME}!-f】</p>
+<p>【RewriteCond%{REQUEST_FILENAME}!-d】</p>
+<p>这两句语句的意思是请求的文件或路径是不存在的，如果文件或路径存在将返回已经存在的文件或路径</p>
+<p>【RewriteRule^(.<em>)$/blog/$1】重写规则，最重要的部分，意思是当上面的RewriteCond条件都满足的时候，将会执行此重写规则，^(.</em>)$是一个正则表达的匹配，匹配的是当前请求的URL，^(.<em>)$意思是匹配当前URL任意字符，.表示任意单个字符，*表示匹配0次或N次（N&gt;0），后面/blog/$1是重写成分，意思是将前面匹配的字符重写成/blog/$1，这个$1表示反向匹配，引用的是前面第一个圆括号的成分，即^(.</em>)$中的.*，其实这儿将会出现一个问题，后面讨论。</p>
+<p>【RewriteCond%{HTTP_HOST}^(www.)?xxx.com$】</p>
+<p>【RewriteRule^(/)?$blog/index.php[L]】</p>
+<p>这两句的意思是指请求的host地址是<a href="http://www.xxx.com是，如果地址的结尾只有0个或者1个“/”时，将会重写到子目录下的主页，我猜想这主要因为重写后的地址是不能自动寻找主页的，需要自己指定。" target="_blank" rel="noopener">www.xxx.com是，如果地址的结尾只有0个或者1个“/”时，将会重写到子目录下的主页，我猜想这主要因为重写后的地址是不能自动寻找主页的，需要自己指定。</a></p>
+<p>现在说说出现的问题，RewriteRule^(.<em>)$/blog/$1前部分^(.</em>)$将会匹配当前请求的url，例如：请求网址是<a href="http://www.xxx.com/a.html，到底是匹配整个http://www.xxx.com/a.html，还是只匹配/a.html即反斜杠后面的成分，还是只匹配a.html。" target="_blank" rel="noopener">http://www.xxx.com/a.html，到底是匹配整个http://www.xxx.com/a.html，还是只匹配/a.html即反斜杠后面的成分，还是只匹配a.html。</a></p>
+<p>答案是：根据RewriteBase规则规定，如果rewritebase为/，将会匹配a.html，不带前面的反斜杠，所以上条语句应该写成RewriteRule^(.*)$blog/$1（不带/），不过实际应用上带上前面的反斜杠，也可以用，可能带不带都行。现在问题出来了，如果不设置rewritebase为/，将会匹配整个网址<a href="http://www.xxx.com/a.html，显然这是错误的，所以应该添加这条：" target="_blank" rel="noopener">http://www.xxx.com/a.html，显然这是错误的，所以应该添加这条：</a></p>
+<p>RewiteBase/</p>
+<p>还有一个问题是，不能保证每个人输入的网址都是小写的，如果输入大写的呢，linux系统是区分大小写的，所以应该在RewriteCond后添加[NC]忽略大小写的。</p>
+<p>至此，完整的语句应该是：</p>
+<p>####start####</p>
+<p>RewriteEngineOn</p>
+<p>RewiteBase/</p>
+<p>RewriteCond%{HTTP_HOST}^(www.)?xxx.com$[NC]</p>
+<p>RewriteCond%{REQUEST_URI}!^/blog/</p>
+<p>RewriteCond%{REQUEST_FILENAME}!-f</p>
+<p>RewriteCond%{REQUEST_FILENAME}!-d</p>
+<p>RewriteRule^(.*)$blog/$1</p>
+<p>#没有输入文件名的默认到到首页</p>
+<p>RewriteCond%{HTTP_HOST}^(www.)?xxx.com$[NC]</p>
+<p>RewriteRule^(/)?$blog/index.php[L]</p>
+<p>####end####</p>
+<p>如果后面还继续有语句的，就不应该加上最后的[L]，因为这是表示最后一条语句的意思</p>
+<p>防盗链的语句，同样需要添加RewiteBase/，如下：</p>
+<p>RewriteEngineon</p>
+<p>RewiteBase/</p>
+<p>RewriteCond%{HTTP_REFERER}!^$[NC]</p>
+<p>RewriteCond%{HTTP_REFERER}!xxx.info[NC]</p>
+<p>RewriteRule.(jpg|gif|png|bmp|swf|jpeg)$/error/daolian.gif[R,NC,L]</p>
+<p>如果后面还继续有语句的，就不应该加上最后的[L]，/error/daolian.gif为别人盗链时显示的图片。</p>
+<p>下面附上简单的语法规则和flags：</p>
+<p>【RewriteCond语法：】</p>
+<p>RewriteCondTestStringCondPattern[flags]</p>
+<p>rewritecond的其他用法：</p>
+<p>‘-d’(目录)</p>
+<p>将TestString视为一个路径名并测试它是否为一个存在的目录。</p>
+<p>‘-f’(常规文件)</p>
+<p>将TestString视为一个路径名并测试它是否为一个存在的常规文件。</p>
+<p>‘-s’(非空的常规文件)</p>
+<p>将TestString视为一个路径名并测试它是否为一个存在的、尺寸大于0的常规文件。</p>
+<p>‘-l’(符号连接)</p>
+<p>将TestString视为一个路径名并测试它是否为一个存在的符号连接。</p>
+<p>‘-x’(可执行)</p>
+<p>将TestString视为一个路径名并测试它是否为一个存在的、具有可执行权限的文件。该权限由操作系统检测。</p>
+<p>‘-F’(对子请求存在的文件)</p>
+<p>检查TestString是否为一个有效的文件，而且可以在服务器当前的访问控制配置下被访问。它使用一个内部子请求来做检查，由于会降低服务器的性能，所以请谨慎使用！</p>
+<p>‘-U’(对子请求存在的URL)</p>
+<p>检查TestString是否为一个有效的URL，而且可以在服务器当前的访问控制配置下被访问。它使用一个内部子请求来做检查，由于会降低服务器的性能，所以请谨慎使用！</p>
+<p>【RewriteRule语法：】</p>
+<p>RewriteRulePatternSubstitution[flags]</p>
+<p>【flags】：</p>
+<p>‘chain|C’(链接下一规则)</p>
+<p>此标记使当前规则与下一个规则相链接。它产生这样的效果：如果一个规则被匹配，则继续处理其后继规则，也就是这个标记不起作用；如果该规则不被匹配，则其后继规则将被跳过。比如，在一个目录级规则中执行一个外部重定向时，你可能需要删除”.www”(此处不应该出现”.www”)。</p>
+<p>‘cookie|CO=NAME:VAL:domain[:lifetime[:path]]’(设置cookie)</p>
+<p>在客户端设置一个cookie。cookie的名称是NAME，值是VAL。domain是该cookie的域，比如’.apache.org’，可选的lifetime是cookie的有效期(分钟)，可选的path是cookie的路径。</p>
+<p>‘env|E=VAR:VAL’(设置环境变量)</p>
+<p>此标记将环境变量VAR的值为VAL，VAL可以包含可扩展的正则表达式反向引用($N和%N)。此标记可以多次使用以设置多个变量。这些变量可以在其后许多情况下被间接引用，通常是在XSSI(&lt;!–#echovar=”VAR”–&gt;)或CGI($ENV{‘VAR’})中，也可以在后继的RewriteCond指令的CondPattern参数中通过%{ENV:VAR}引用。使用它可以记住从URL中剥离的信息。</p>
+<p>‘forbidden|F’(强制禁止URL)</p>
+<p>强制禁止当前URL，也就是立即反馈一个HTTP响应码403(被禁止的)。使用这个标记，可以链接若干个RewriteConds来有条件地阻塞某些URL。</p>
+<p>‘gone|G’(强制废弃URL)</p>
+<p>强制当前URL为已废弃，也就是立即反馈一个HTTP响应码410(已废弃的)。使用这个标记，可以标明页面已经被废弃而不存在了。</p>
+<p>‘handler|H=Content-handler’(强制指定内容处理器)</p>
+<p>强自制定目标文件的内容处理器为Content-handler。例如，用来模拟mod_alias模块的ScriptAlias指令，以强制映射文件夹内的所有文件都由”cgi-script”处理器处理。</p>
+<p>‘last|L’(结尾规则)</p>
+<p>立即停止重写操作，并不再应用其他重写规则。它对应于Perl中的last命令或C语言中的break命令。这个标记用于阻止当前已被重写的URL被后继规则再次重写。例如，使用它可以重写根路径的URL(‘/’)为实际存在的URL(比如：’/e/www/’)。</p>
+<p>‘next|N’(从头再来)</p>
+<p>重新执行重写操作(从第一个规则重新开始)。此时再次进行处理的URL已经不是原始的URL了，而是经最后一个重写规则处理过的URL。它对应于Perl中的next命令或C语言中的continue命令。此标记可以重新开始重写操作(立即回到循环的开头)。但是要小心，不要制造死循环！</p>
+<p>‘nocase|NC’(忽略大小写)</p>
+<p>它使Pattern忽略大小写，也就是在Pattern与当前URL匹配时，’A-Z’和’a-z’没有区别。</p>
+<p>‘noescape|NE’(在输出中不对URI进行转义)</p>
+<p>此标记阻止mod_rewrite对重写结果应用常规的URI转义规则。一般情况下，特殊字符(‘%’,‘$’,‘;’等)会被转义为等值的十六进制编码(‘%′,‘$′,‘;’等)。此标记可以阻止这样的转义，以允许百分号等符号出现在输出中，比如：</p>
+<p>RewriteRule/foo/(.*)/bar?arg=P1=$1[R,NE]</p>
+<p>可以使’/foo/zed转向到一个安全的请求’/bar?arg=P1=zed’。</p>
+<p>‘nosubreq|NS’(不对内部子请求进行处理)</p>
+<p>在当前请求是一个内部子请求时，此标记强制重写引擎跳过该重写规则。比如，在mod_include试图搜索目录默认文件(index.xxx)时，Apache会在内部产生子请求。对于子请求，重写规则不一定有用，而且如果整个规则集都起作用，它甚至可能会引发错误。所以，可以用这个标记来排除某些规则。</p>
+<p>使用原则：如果你为URL添加了CGI脚本前缀，以强制它们由CGI脚本处理，但对子请求处理的出错率(或者资源开销)很高，在这种情况下，可以使用这个标记。</p>
+<p>‘proxy|P’(强制为代理)</p>
+<p>此标记使替换成分被内部地强制作为代理请求发送，并立即中断重写处理，然后把处理移交给mod_proxy模块。你必须确保此替换串是一个能够被mod_proxy处理的有效URI(比如以<a href="http://hostname开头)，否则将得到一个代理模块返回的错误。使用这个标记，可以把某些远程成分映射到本地服务器域名空间，从而增强了ProxyPass指令的功能。" target="_blank" rel="noopener">http://hostname开头)，否则将得到一个代理模块返回的错误。使用这个标记，可以把某些远程成分映射到本地服务器域名空间，从而增强了ProxyPass指令的功能。</a></p>
+<p>注意：要使用这个功能，必须已经启用了mod_proxy模块。</p>
+<p>‘passthrough|PT’(移交给下一个处理器)</p>
+<p>此标记强制重写引擎将内部request_rec结构中的uri字段设置为filename字段的值，这个小小的修改使得RewriteRule指令的输出能够被(从URI转换到文件名的)Alias,ScriptAlias,Redirect等指令进行后续处理[原文：Thisflagisjustahacktoenablepost-processingoftheoutputofRewriteRuledirectives,usingAlias,ScriptAlias,Redirect,andotherdirectivesfromvariousURI-to-filenametranslators.]。</p>
+<p>举一个能说明其含义的例子：如果要将/abc重写为/def，然后再使用mod_alias将/def转换为/ghi，可以这样：</p>
+<p>RewriteRule^/abc(.*)/def$1[PT]</p>
+<p>Alias/def/ghi</p>
+<p>如果省略了PT标记，虽然将uri=/abc/…重写为filename=/def/…的部分运作正常，但是后续的mod_alias在试图将URI转换到文件名时会遭遇失效。</p>
+<p>注意：如果需要混合使用多个将URI转换到文件名的模块时，就必须使用这个标记。。此处混合使用mod_alias和mod_rewrite就是个典型的例子。</p>
+<p>‘qsappend|QSA’(追加查询字符串)</p>
+<p>此标记强制重写引擎在已有的替换字符串中追加一个查询字符串，而不是简单的替换。如果需要通过重写规则在请求串中增加信息，就可以使用这个标记。</p>
+<p>‘redirect|R[=code]‘(强制重定向)</p>
+<p>若Substitution以<a href="http://thishost[:thisport]/(使新的URL成为一个URI)开头，可以强制性执行一个外部重定向。如果没有指定code，则产生一个HTTP响应码302(临时性移动)。如果需要使用在300-400范围内的其他响应代码，只需在此指定即可(或使用下列符号名称之一：temp(默认),permanent,seeother)。使用它可以把规范化的URL反馈给客户端，如将”/~”重写为”/u/”，或始终对/u/user加上斜杠，等等。" target="_blank" rel="noopener">http://thishost[:thisport]/(使新的URL成为一个URI)开头，可以强制性执行一个外部重定向。如果没有指定code，则产生一个HTTP响应码302(临时性移动)。如果需要使用在300-400范围内的其他响应代码，只需在此指定即可(或使用下列符号名称之一：temp(默认),permanent,seeother)。使用它可以把规范化的URL反馈给客户端，如将”/~”重写为”/u/”，或始终对/u/user加上斜杠，等等。</a></p>
+<p>注意：在使用这个标记时，必须确保该替换字段是一个有效的URL。否则，它会指向一个无效的位置！并且要记住，此标记本身只是对URL加上<a href="http://thishost[:thisport]/前缀，重写操作仍然会继续进行。通常，你还会希望停止重写操作而立即重定向，那么就还需要使用’L&#39;标记。" target="_blank" rel="noopener">http://thishost[:thisport]/前缀，重写操作仍然会继续进行。通常，你还会希望停止重写操作而立即重定向，那么就还需要使用’L&#39;标记。</a></p>
+<p>‘skip|S=num’(跳过后继规则)</p>
+<p>此标记强制重写引擎跳过当前匹配规则之后的num个规则。它可以模拟if-then-else结构：最后一个规则是then从句，而被跳过的skip=N个规则是else从句。注意：它和’chain|C’标记是不同的！</p>
+<p>‘type|T=MIME-type’(强制MIME类型)</p>
+<p>强制目标文件的MIME类型为MIME-type，可以用来基于某些特定条件强制设置内容类型。比如，下面的指令可以让.php文件在以.phps扩展名调用的情况下由mod_php按照PHP源代码的MIME类型(application/x-httpd-php-source)显示：</p>
+<p>RewriteRule^(.+.php)s$$1[T=application/x-httpd-php-source]</p>
+
+        </div>
+        <!-- .entry-content -->
+        <div class="single-reward">
+          <div class="reward-open">赏<div class="reward-main">
+              <ul class="reward-row">
+                <li class="alipay-code"><img src="undefined"></li>
+                <li class="wechat-code"><img src="undefined"></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
+        <footer class="post-footer">
+          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
+          <div class="post-tags">
+          </div>
+          <div class="post-share">
+            <div class="social-share sharehidden share-component"></div>
+            <i class="iconfont show-share icon-forward"></i>
+          </div>
+        </footer><!-- .entry-footer -->
+      </article>
+      <!-- #post-## -->
+      <div class="toc" style="background: none;"></div>
+      <section class="post-squares nextprev">
+        
+          
+            <div class="post-nepre half previous">
+          
+            <a href="/2020/02/15/TianyiTap发布/" rel="prev">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/mwx2006/Img/post/image-20200215115022979.png" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/mwx2006/Img/post/image-20200215115022979.png">
+              </div>
+              <span class="label">
+              Previous Post</span>
+              <div class="info">
+                <h3>
+                TianyiTap发布</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+        
+          
+            <div class="post-nepre half next">
+          
+            <a href="/2019/11/26/部署-Office-Online-Server/" rel="next">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/loader/orange.progress-bar-stripe-loader.svg" data-src="" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="">
+              </div>
+              <span class="label">
+              Next Post</span>
+              <div class="info">
+                <h3>
+                部署 Office Online Server</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+      </section>
+      
+<div id="vcomments"></div>
+<script>
+  window.onload = function(){
+      var valine = new Valine();
+      valine.init({
+        el: '#vcomments',
+        appId: "4cWxpNhgVTm5dJrnWGU1zpUS-MdYXbMMI",
+        appKey: "9ukWp1RJdcqihwVgnvWTKt5N",
+        path: window.location.pathname,
+        placeholder: "你是我一生只会遇见一次的惊喜 ..."
+      })
+  }
+</script>
+
+      <section class="author-profile">
+        <div class="info" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <a href="mwx-lh.com" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/mwx2006/Img/avatar.jpg" itemprop="image" alt="MWX" height="70" width="70"></a>
+          <div class="meta">
+            <span class="title">Author</span>
+            <h3 itemprop="name">
+            <a href="mwx-lh.com" itemprop="url" rel="author">MWX</a>
+            </h3>
+          </div>
+        </div>
+        <hr>
+        <p><i class="iconfont icon-write"></i>MWX</p>
+      </section>
+    </main><!-- #main -->
+  </div><!-- #primary -->
+</div>
+
+
+
+    </div>    
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="请输入关键词..."/>
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            // PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+    <!-- <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 MWX<br>
+      powered_by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer> -->
+<footer id="colophon" class="site-footer" role="contentinfo">
+  <div class="site-info">
+    <div class="footertext">
+      <div class="img-preload">
+        <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/wordpress-rotating-ball-o.svg">
+        <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/disqus-preloader.svg">
+      </div>
+      <p style="color: #666666;">&copy MWX 2018-2020</p>
+    </div>
+    <div class="footer-device">
+    <p style="font-family: 'Ubuntu', sans-serif;">
+        <span style="color: #b9b9b9;"> <i class="iconfont icon-sakura rotating" style="color: #ffc0cb;display:inline-block"></i>Powered by Hexo
+        </span>
+      </p>
+    </div>
+  </div><!-- .site-info -->
+</footer>
+
+
+
+<!-- <script src="/js/tocbot.js"></script> -->
+<script type="text/javascript" src="/js/lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script type="text/javascript" src="/js/InsightSearch.js"></script>
+<script type="text/javascript" src="/js/jquery.fancybox.min.js"></script>
+<script type="text/javascript" src="/js/zoom.min.js"></script>
+<script type="text/javascript" src="/js/sakura-app.js"></script>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='//unpkg.com/valine@1.3.4/dist/Valine.min.js'></script>
+<!-- 不蒜子 网页计数器 -->
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script> -->
+<script type="text/javascript">
+/* <![CDATA[ */
+if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  var Poi = {"pjax":"1","movies":{"url": "https://cdn.jsdelivr.net/gh/honjun/hojun@1.2","name":"Unbroken.mp4","live":"close"},"windowheight":"fixed","codelamp":"close","ajaxurl":"","order":"asc","formpostion":"bottom"};
+} else {
+  var Poi = {"pjax":"1","movies":{"url": "https://cdn.jsdelivr.net/gh/honjun/hojun@1.2","name":"Unbroken.mp4","live":"open"},"windowheight":"auto","codelamp":"close","ajaxurl":"","order":"asc","formpostion":"bottom"};
+}
+/* ]]> */
+
+</script>
+<script>
+$(document).ready(function() {
+  if ($(".toc").length > 0 && document.body.clientWidth > 1200) {
+    if ($(".pattern-center").length > 0) { //有图的情况
+      tocbot.init({
+          // Where to render the table of contents.
+          tocSelector: '.toc', // 放置目录的容器
+          // Where to grab the headings to build the table of contents.
+          contentSelector: '.entry-content', // 正文内容所在
+          // Which headings to grab inside of the contentSelector element.
+          scrollSmooth: true,
+          headingSelector: 'h1, h2, h3, h4, h5', // 需要索引的标题级别
+          headingsOffset: -400,
+          scrollSmoothOffset: -85
+      });
+    } else {
+      tocbot.init({
+          // Where to render the table of contents.
+          tocSelector: '.toc', // 放置目录的容器
+          // Where to grab the headings to build the table of contents.
+          contentSelector: '.entry-content', // 正文内容所在
+          // Which headings to grab inside of the contentSelector element.
+          scrollSmooth: true,
+          headingSelector: 'h1, h2, h3, h4, h5', // 需要索引的标题级别
+          headingsOffset: -85,
+          scrollSmoothOffset: -85
+      });
+    }
+    var offsetTop = $('.toc').offset().top - 95;
+    window.onscroll = function() {
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+      if (scrollTop >= offsetTop) {
+        $('.toc').addClass('toc-fixed');
+      } else {
+        $('.toc').removeClass('toc-fixed');
+      }
+    }
+  }
+});
+</script>
+<script>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+  <div id="landlord">
+      <div class="message" style="opacity:0"></div>
+      <canvas id="live2d" width="280" height="250" class="live2d"></canvas>
+      <div class="hide-button">隐藏</div>
+  </div>
+  <script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+  <script type="text/javascript">
+      var message_Path = '/live2d/'
+      var home_Path = 'https://mwx-lh.com/'
+  </script>
+  <script type="text/javascript" src="/live2d/js/live2d.js"></script>
+  <script type="text/javascript" src="/live2d/js/message.js"></script>
+  <script type="text/javascript">
+      loadlive2d("live2d", "/live2d/model/tianyi/model.json");
+  </script>
+    <div class="openNav no-select" style="height: 50px;">
+      <div class="iconflat no-select" style="width: 50px; height: 50px;">
+        <div class="icon"></div>
+      </div>
+      <div class="site-branding search-form-submit">
+        <i class="iconfont js-toggle-search iconsearch icon-search"></i>
+      </div>
+    </div>
+  </section>
+  <div id="mo-nav" class="">
+  <div class="m-avatar">
+    <img src="https://cdn.jsdelivr.net/gh/mwx2006/Img/avatar.jpg">
+  </div>
+  <p style="text-align: center; color: #333; font-weight: 900; font-family: 'Ubuntu', sans-serif; letter-spacing: 1.5px">暗雨-MWX</p>
+  <p style="text-align: center; word-spacing: 20px;">
+    
+      
+        <a href="http://github.com/mwx2006" class="fa fa-github" target="_blank" style="color: #333; margin-left:20px"></a>
+      
+        <a href="https://t.me/joinchat/Obf09BP1q8SnCix5qkar9A" class="fa fa-telegram" target="_blank" style="color: #dd4b39; margin-left:20px"></a>
+      
+        <a href="http://qm.qq.com/cgi-bin/qm/qr?k=Tj5T5LysTQroRCqThEKXCEPmLmsGXYo2&authKey=muD25VZa16FTcJFFtx4xMnu7JKR1BioQJ4SGrid%2FHvIrCTWZKZFFuLF%2F0fhgG5LQ&group_code=930178809" class="fa fa-qq" target="_blank" style="color: #25c6fe; margin-left:20px"></a>
+      
+    
+  </p>
+  <ul id="menu-new-1" class="menu">
+    
+      <li>
+        <a href="/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-fort-awesome faa-shake" aria-hidden="true"></i>
+            首页
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/archives">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-archive faa-shake" aria-hidden="true"></i>
+            归档
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/links/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-link faa-shake" aria-hidden="true"></i>
+            友人帐
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/donate/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-heart faa-pulse" aria-hidden="true"></i>
+            赞赏
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-leaf faa-wrench" aria-hidden="true"></i>
+            关于
+          </span>
+        </a>
+        
+          <ul class="sub-menu">
+            
+              <li>
+                <a href="/about/">
+                  <i class="fa fa-meetup" aria-hidden="true"></i>
+                  我？
+                </a>
+              </li>
+            
+              <li>
+                <a href="/theme-sakura/">
+                  <i class="fa iconfont icon-sakura" aria-hidden="true"></i>
+                  主题
+                </a>
+              </li>
+            
+              <li>
+                <a href="/lab/">
+                  <i class="fa fa-cogs" aria-hidden="true"></i>
+                  Lab
+                </a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+      <li>
+        <a href="/atom.xml">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-rss faa-pulse" aria-hidden="true"></i>
+            RSS
+          </span>
+        </a>
+        
+      </li>
+    
+      <li>
+        <a href="/mc/">
+          <span class="faa-parent animated-hover">
+            <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
+            我的世界
+          </span>
+        </a>
+        
+      </li>
+    
+  </ul>
+  <p style="text-align: center; font-size: 13px; color: #b9b9b9;">&copy 2019 MWX</p>
+</div>
+<button onclick="topFunction()" class="mobile-cd-top" id="moblieGoTop" title="Go to top" style="display: none;"><i class="fa fa-chevron-up" aria-hidden="true"></i></button>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+<style>
+  .aplayer .aplayer-lrc {
+    height: 35px;
+  }
+  .aplayer .aplayer-lrc p{
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 18px !important;
+  }
+  .aplayer .aplayer-lrc p.aplayer-lrc-current{
+    color: #FF1493;
+  }
+  .aplayer.aplayer-narrow .aplayer-body{
+    left: -66px !important;
+  }
+  .aplayer.aplayer-fixed .aplayer-lrc {
+    display: none;
+  }
+  .aplayer .aplayer-lrc.aplayer-lrc-hide {
+      display:none !important;
+  }
+  .aplayer.aplayer-fixed .lrc-show {
+    display: block;
+    background: rgba(255, 255, 255, 0.8);
+  }
+</style>
+<div class="aplayer"
+
+    data-id="885893447"
+
+    data-server="netease"
+
+    data-type="playlist"
+
+    data-fixed="true"
+
+    data-autoplay="false"
+
+    data-loop="all"
+
+    data-order="random"
+
+    data-preload="auto"
+
+    data-volume="0.7"
+
+    data-mutex="true"
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
+<script>
+  $(function(){
+    $('body').on('click', '.aplayer', function(){
+      if($('.aplayer-button').hasClass('aplayer-play')) {
+        $('.aplayer-lrc').removeClass('lrc-show');
+      } else {
+        $('.aplayer-lrc').addClass('lrc-show');
+      }
+    })
+  });
+</script>
+</body>
+</html>

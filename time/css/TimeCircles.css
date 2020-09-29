@@ -1,0 +1,124 @@
+
+@font-face {
+    font-family: "mc";
+    src: url("./minecraft.woff2") format("woff2"),
+         url("./minecraft.woff") format("woff"),
+         url("./minecraft.ttf") format("truetype"),
+         url("./minecraft.eot") format("embedded-opentype"),
+         url("./minecraft.svg") format("svg"),
+         url("./minecraft.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "lty";
+    src: url("./lty.woff2") format("woff2"),
+         url("./lty.woff") format("woff"),
+         url("./lty.ttf") format("truetype"),
+         url("./lty.eot") format("embedded-opentype"),
+         url("./lty.svg") format("svg"),
+         url("./lty.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+  }
+/**
+ *	This element is created inside your target element
+ *	It is used so that your own element will not need to be altered
+ **/
+.time_circles {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/**
+ *	This is all the elements used to house all text used
+ * in time circles
+ **/
+.time_circles > div {
+    position: absolute;
+    text-align: center;
+}
+
+/**
+ *	Titles (Days, Hours, etc)
+ **/
+.time_circles > div > h4 {
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+    text-transform: uppercase;
+    font-family: 'mc';
+}
+
+/**
+ *	Time numbers, ie: 12
+ **/
+.time_circles > div > span {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-family: 'mc';
+    font-size: 300%;
+    margin-top: 0.4em;
+    font-weight: bold;
+}
+.menu{
+    height:60px;
+    line-height: 60px;
+    margin-bottom:30px;
+    width: 100%;
+    background: #ccc;
+    text-align: center;
+}
+.menu a{
+    color: #000;
+    padding-right:20px;
+    text-decoration: none;
+}
+.menu a:hover{
+    text-decoration: underline;
+    color:blue;
+}
+
+@font-face {
+  font-family: "mc";
+  src: url("./minecraft.woff2") format("woff2"),
+       url("./minecraft.woff") format("woff"),
+       url("./minecraft.ttf") format("truetype"),
+       url("./minecraft.eot") format("embedded-opentype"),
+       url("./minecraft.svg") format("svg"),
+       url("./minecraft.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+table.altrowstable {
+    font-size: 25px;
+    color: #333333;
+    border-width: 1px;
+    border-color: #a9c6c9;
+    opacity: 0.85;
+    border-collapse: collapse;
+}
+
+table.altrowstable th {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #a9c6c9;
+}
+
+table.altrowstable td {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #a9c6c9;
+}
+
+.oddrowcolor {
+    background-color: #d4e3e5;
+}
+
+.evenrowcolor {
+    background-color: #c3dde0;
+}

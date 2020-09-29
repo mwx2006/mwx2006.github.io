@@ -1,0 +1,13 @@
+@charset "UTF-8";
+
+@font-face {
+  font-family: "lty";
+  src: url("/lty.woff2") format("woff2"),
+       url("/lty.woff") format("woff"),
+       url("/lty.ttf") format("truetype"),
+       url("/lty.eot") format("embedded-opentype"),
+       url("/lty.svg") format("svg"),
+       url("/lty.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
